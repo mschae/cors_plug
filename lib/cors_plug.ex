@@ -8,7 +8,8 @@ defmodule CORSPlug do
       max_age:     1728000,
       headers:     ["Authorization", "Content-Type", "Accept", "Origin",
                     "User-Agent", "DNT","Cache-Control", "X-Mx-ReqToken",
-                    "Keep-Alive", "X-Requested-With", "If-Modified-Since"],
+                    "Keep-Alive", "X-Requested-With", "If-Modified-Since",
+                    "X-CSRF-Token"],
       methods:     ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
     ], options
   end
