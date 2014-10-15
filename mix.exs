@@ -5,7 +5,14 @@ defmodule CorsPlug.Mixfile do
     [app: :cors_plug,
      version: "0.0.1",
      elixir: ">= 1.0.0",
-     deps: deps]
+     deps: deps,
+      package: [
+        contributors: ["Michael Schaefermeyer"],
+        licenses: ["MIT"],
+        links: %{"Github" => "http://github.com/mschae/cors_plug"}
+      ],
+      description: description
+   ]
   end
 
   # Configuration for the OTP application
@@ -29,5 +36,12 @@ defmodule CorsPlug.Mixfile do
       {:cowboy, "~> 1.0.0"},
       {:plug, "~> 0.8.1"}
     ]
+  end
+
+  defp description do
+    """
+    An elixir plug that adds CORS headers to requests and responds to
+    preflight requests (OPTIONS)
+    """
   end
 end
