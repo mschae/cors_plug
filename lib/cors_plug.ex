@@ -1,8 +1,8 @@
 defmodule CORSPlug do
   import Plug.Conn
 
-  def init(options) do
-    Dict.merge [
+  def defaults do
+    [
       origin:      "*",
       credentials: true,
       max_age:     1728000,
@@ -11,7 +11,11 @@ defmodule CORSPlug do
                     "Keep-Alive", "X-Requested-With", "If-Modified-Since",
                     "X-CSRF-Token"],
       methods:     ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
-    ], options
+    ]
+  end
+
+  def init(options) do
+    Dict.merge defaults, options
   end
 
   def call(conn, options) do
