@@ -1,7 +1,8 @@
 CorsPlug
 ========
+[![Build Status](https://travis-ci.org/mschae/cors_plug.svg)](https://travis-ci.org/mschae/cors_plug)
 
-An [Elixir Plug](http://github.com/elixir-lang/plug) to add CORS.
+An [Elixir Plug](http://github.com/elixir-lang/plug) to add [CORS](http://www.w3.org/TR/cors/).
 
 ## Usage
 
@@ -47,4 +48,4 @@ You can configure the value of these headers as follows:
 plug CORSPlug, [origin: "example.com"]
 ```
 
-Please find the list of current defaults in [lib/cors_plug.ex#L5:L13](cors_plug.ex).
+Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L13).
