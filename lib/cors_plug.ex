@@ -41,6 +41,14 @@ defmodule CORSPlug do
     ]
   end
 
-  defp origin(:self, conn), do: conn.host
+  defp origin(:self, conn) do
+    IO.inspect conn.req_headers
+    {_, host} =
+      Enum.find(conn.req_headers,
+                {nil, "*"},
+                fn({header, _val}) -> header == "origin" end)
+    host
+  end
+
   defp origin(origin, _conn), do: origin
 end

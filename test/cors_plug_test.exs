@@ -24,11 +24,12 @@ defmodule CORSPlugTest do
 
   test "origin :self returns the request host" do
     opts = CORSPlug.init(origin: :self)
-    conn = conn(:get, "/", nil)
+    conn = conn(:get, "/", nil,
+                headers: [{"origin", "http://cors-plug.example"}])
 
     conn = CORSPlug.call(conn, opts)
 
     assert Enum.member? conn.resp_headers,
-                        {"access-control-allow-origin", "www.example.com"}
+                        {"access-control-allow-origin", "http://cors-plug.example"}
   end
 end
