@@ -19,25 +19,28 @@ defmodule CORSPlug do
   end
 
   def call(conn, options) do
-    conn = %{conn | resp_headers: headers(conn.method, options)}
+    conn = %{conn | resp_headers: headers(conn, options)}
     case conn.method do
       "OPTIONS" -> halt send_resp conn, 204, ""
       _method   -> conn
     end
   end
 
-  defp headers("OPTIONS", options) do
-    headers("", options) ++ [
+  defp headers(conn = [method: "OPTIONS"], options) do
+    headers(Enum.merge(conn, [method: nil]), options) ++ [
       {"access-control-max-age", "#{options[:max_age]}"},
       {"access-control-allow-headers", Enum.join(options[:headers], ",")},
       {"access-control-allow-methods", Enum.join(options[:methods], ",")}
     ]
   end
 
-  defp headers(_method, options) do
+  defp headers(conn, options) do
     [
-      {"access-control-allow-origin", options[:origin]},
+      {"access-control-allow-origin", origin(options[:origin], conn)},
       {"access-control-allow-credentials", "#{options[:credentials]}"}
     ]
   end
+
+  defp origin(:self, conn), do: conn.host
+  defp origin(origin, _conn), do: origin
 end
