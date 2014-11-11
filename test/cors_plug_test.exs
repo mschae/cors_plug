@@ -22,6 +22,25 @@ defmodule CORSPlugTest do
                         {"access-control-allow-origin", "example.com"}
   end
 
+  test "passes all the relevant headers on an options request" do
+    opts = CORSPlug.init([])
+    conn = conn(:options, "/")
+
+    conn = CORSPlug.call(conn, opts)
+
+    headers =
+      conn.resp_headers
+      |> Enum.map(fn({key, value}) -> key end)
+
+    assert headers == [
+      "access-control-allow-origin",
+      "access-control-allow-credentials",
+      "access-control-max-age",
+      "access-control-allow-headers",
+      "access-control-allow-methods"
+    ]
+  end
+
   test "origin :self returns the request host" do
     opts = CORSPlug.init(origin: :self)
     conn = conn(:get, "/", nil,

@@ -26,8 +26,8 @@ defmodule CORSPlug do
     end
   end
 
-  defp headers(conn = [method: "OPTIONS"], options) do
-    headers(Enum.merge(conn, [method: nil]), options) ++ [
+  defp headers(conn = %Plug.Conn{method: "OPTIONS"}, options) do
+    headers(%{conn | method: nil}, options) ++ [
       {"access-control-max-age", "#{options[:max_age]}"},
       {"access-control-allow-headers", Enum.join(options[:headers], ",")},
       {"access-control-allow-methods", Enum.join(options[:methods], ",")}
