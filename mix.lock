@@ -1,4 +1,4 @@
-%{"cowboy": {:hex, :cowboy, "1.0.0"},
-  "cowlib": {:hex, :cowlib, "1.0.0"},
-  "plug": {:hex, :plug, "0.8.1"},
-  "ranch": {:hex, :ranch, "1.0.0"}}
+%{"cowboy": {:hex, :cowboy, "~> 1.0.0"},
+  "cowlib": {:hex, :cowlib, "~> 1.0.0"},
+  "plug": {:hex, :plug, "~> .8.1"},
+  "ranch": {:hex, :ranch, "~> 1.0.0"}}
