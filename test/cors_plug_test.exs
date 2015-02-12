@@ -30,7 +30,7 @@ defmodule CORSPlugTest do
 
     headers =
       conn.resp_headers
-      |> Enum.map(fn({key, value}) -> key end)
+      |> Enum.map(fn({key, _value}) -> key end)
 
     assert headers == [
       "access-control-allow-origin",
