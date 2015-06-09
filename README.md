@@ -25,6 +25,18 @@ pipeline :api do
 end
 ```
 
+It should be noted that Phoenix pipelines are only invoked for matched routes, so you will need to add `options` routes for your API endpoints. Leaving this out will cause the `plug` to not be called and the response will be a 404.
+
+```elixir
+scope "/api", PhoenixApp do
+  pipe_through :api
+
+  resources "/articles", ArticleController
+  options   "/articles", ArticleController, :options
+  options   "/articles/:id", ArticleController, :options
+end
+```
+
 ## Configuration
 
 This plug will return the following headers:
