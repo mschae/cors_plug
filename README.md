@@ -16,16 +16,24 @@ def deps do
 end
 ```
 
-Use it in a phoenix pipeline (or wherever):
+When used together with the awesomeness that's the [Phoenix Framework](http://www.phoenixframework.org/)
+please note that putting the CORSPlug in a pipeline won't work as they are only invoked for
+matched routes.
+
+I therefore recommend to put it in `lib/<you_app>/endpoint.ex`:
 
 ```elixir
-pipeline :api do
+defmodule YourApp.Endpoint do
+  use Phoenix.Enpoint, otp_app: :your_app
+
+  # ...
   plug CORSPlug
-  super
+
+  plug :router, YourApp.Router
 end
 ```
 
-It should be noted that Phoenix pipelines are only invoked for matched routes, so you will need to add `options` routes for your API endpoints. Leaving this out will cause the `plug` to not be called and the response will be a 404.
+Alternatively you can add options routes, as suggested by @leighhalliday
 
 ```elixir
 scope "/api", PhoenixApp do
