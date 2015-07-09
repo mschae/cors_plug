@@ -20,7 +20,7 @@ When used together with the awesomeness that's the [Phoenix Framework](http://ww
 please note that putting the CORSPlug in a pipeline won't work as they are only invoked for
 matched routes.
 
-I therefore recommend to put it in `lib/<you_app>/endpoint.ex`:
+I therefore recommend to put it in `lib/your_app/endpoint.ex`:
 
 ```elixir
 defmodule YourApp.Endpoint do
