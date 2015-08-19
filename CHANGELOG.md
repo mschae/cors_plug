@@ -1,6 +1,6 @@
 # Changelog
 
-I though it might be a good idea to start one...
+I thought it might be a good idea to start one...
 
 ## v0.1.3
 
