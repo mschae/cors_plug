@@ -2,6 +2,11 @@
 
 I thought it might be a good idea to start one...
 
+## v0.1.4
+
+* Enhancements
+  * Add [`Access-Control-Expose-Headers`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS#Access-Control-Expose-Headers) (thanks @jaketrent)
+
 ## v0.1.3
 
 * Enhancements
