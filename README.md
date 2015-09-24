@@ -60,6 +60,7 @@ On preflight (`OPTIONS`) requests:
 On `GET`, `POST`, ... requests:
 
 * Access-Control-Allow-Origin
+* Access-Control-Expose-Headers
 * Access-Control-Allow-Credentials
 
 You can configure the value of these headers as follows:
