@@ -34,6 +34,7 @@ defmodule CORSPlugTest do
 
     assert headers == [
       "access-control-allow-origin",
+      "access-control-expose-headers",
       "access-control-allow-credentials",
       "access-control-max-age",
       "access-control-allow-headers",
