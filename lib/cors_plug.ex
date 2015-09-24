@@ -10,6 +10,7 @@ defmodule CORSPlug do
                     "User-Agent", "DNT","Cache-Control", "X-Mx-ReqToken",
                     "Keep-Alive", "X-Requested-With", "If-Modified-Since",
                     "X-CSRF-Token"],
+      expose:      [],
       methods:     ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
     ]
   end
@@ -37,6 +38,7 @@ defmodule CORSPlug do
   defp headers(conn, options) do
     [
       {"access-control-allow-origin", origin(options[:origin], conn)},
+      {"access-control-expose-headers", origin(options[:expose], conn)},
       {"access-control-allow-credentials", "#{options[:credentials]}"}
     ]
   end
