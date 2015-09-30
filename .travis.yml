@@ -1,6 +1,14 @@
 language: elixir
-elixir: 1.0.4
+elixir:
+  - 1.0
 otp_release:
-  - 17.1
-  - 18.0
-env: MIX_ENV=all
+  - 17.4
+  - 17.5
+matrix:
+  include:
+    -
+      elixir: 1.1
+      otp_release: 18.0
+    -
+      elixir: 1.1
+      otp_release: 18.1
