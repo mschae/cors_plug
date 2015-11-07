@@ -29,7 +29,7 @@ defmodule YourApp.Endpoint do
   # ...
   plug CORSPlug
 
-  plug :router, YourApp.Router
+  plug YourApp.Router
 end
 ```
 
