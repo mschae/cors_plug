@@ -28,11 +28,7 @@ defmodule CORSPlugTest do
 
     conn = CORSPlug.call(conn, opts)
 
-    headers =
-      conn.resp_headers
-      |> Enum.map(fn({key, _value}) -> key end)
-
-    assert headers == [
+    required_headers = [
       "access-control-allow-origin",
       "access-control-expose-headers",
       "access-control-allow-credentials",
@@ -40,6 +36,10 @@ defmodule CORSPlugTest do
       "access-control-allow-headers",
       "access-control-allow-methods"
     ]
+
+    for header <- required_headers do
+      assert header in Keyword.keys(conn.resp_headers)
+    end
   end
 
   test "origin :self returns the request host" do
