@@ -2,15 +2,12 @@ defmodule CorsPlug.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :cors_plug,
-     version: "0.1.4",
-     elixir: ">= 1.0.0",
-     deps: deps,
-      package: [
-        contributors: ["Michael Schaefermeyer"],
-        licenses: ["Apache 2.0"],
-        links: %{"Github" => "http://github.com/mschae/cors_plug"}
-      ],
+    [
+      app: :cors_plug,
+      version: "1.0.0",
+      elixir: ">= 1.0.0",
+      deps: deps,
+      package: package,
       description: description
    ]
   end
@@ -34,7 +31,10 @@ defmodule CorsPlug.Mixfile do
   defp deps do
     [
       {:cowboy, "~> 1.0.0"},
-      {:plug, "> 0.8.0"}
+      {:plug, "> 0.8.0"},
+
+      {:ex_doc, "~> 0.11", only: :dev},
+      {:earmark, "~> 0.2", only: :dev},
     ]
   end
 
@@ -43,5 +43,17 @@ defmodule CorsPlug.Mixfile do
     An elixir plug that adds CORS headers to requests and responds to
     preflight requests (OPTIONS)
     """
+  end
+
+  defp package do
+    [
+      files: ~w(lib mix.exs README.md LICENSE CHANGELOG.md),
+      maintainers: ["Michael Schaefermeyer"],
+      licenses: ["Apache 2.0"],
+      links: %{
+        "Github" => "http://github.com/mschae/cors_plug",
+        "Docs"   => "http://hexdocs.pm/cors_plug",
+      }
+    ]
   end
 end
