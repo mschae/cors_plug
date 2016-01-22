@@ -12,3 +12,12 @@ matrix:
     -
       elixir: 1.1
       otp_release: 18.1
+    -
+      elixir: 1.2
+      otp_release: 18.0
+    -
+      elixir: 1.2
+      otp_release: 18.1
+    -
+      elixir: 1.2
+      otp_release: 18.2
