@@ -8,8 +8,11 @@ defmodule CorsPlug.Mixfile do
       elixir: ">= 1.0.0",
       deps: deps,
       package: package,
-      description: description
-   ]
+      description: description,
+      docs: [
+        extras: ~W(README.md CHANGELOG.md)
+      ]
+    ]
   end
 
   # Configuration for the OTP application
