@@ -3,7 +3,7 @@ defmodule CORSPlug do
 
   def defaults do
     [
-      origin:      "*",
+      origins:     ["*"],
       credentials: true,
       max_age:     1728000,
       headers:     ["Authorization", "Content-Type", "Accept", "Origin",
@@ -37,13 +37,13 @@ defmodule CORSPlug do
 
   defp headers(conn, options) do
     [
-      {"access-control-allow-origin", origin(options[:origin], conn)},
+      {"access-control-allow-origin", origin(options[:origins], conn)},
       {"access-control-expose-headers", origin(options[:expose], conn)},
       {"access-control-allow-credentials", "#{options[:credentials]}"}
     ]
   end
 
-  defp origin(:self, conn) do
+  defp origin([:self], conn) do
     {_, host} =
       Enum.find(conn.req_headers,
                 {nil, "*"},
@@ -51,5 +51,11 @@ defmodule CORSPlug do
     host
   end
 
-  defp origin(origin, _conn), do: origin
+  defp origin(["*"], _conn), do: "*"
+
+  defp origin(origins, conn) do
+    req_origin = get_req_header(conn, "origin") |> List.first
+    Enum.find(origins, fn(origin) -> origin == req_origin end)
+  end
+
 end
