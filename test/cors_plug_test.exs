@@ -2,7 +2,6 @@ defmodule CORSPlugTest do
   use ExUnit.Case
   use Plug.Test
 
-
   test "returns the right options for regular requests" do
     opts = CORSPlug.init([])
     conn = conn(:get, "/")
@@ -51,5 +50,14 @@ defmodule CORSPlugTest do
 
     assert Enum.member? conn.resp_headers,
                         {"access-control-allow-origin", "http://cors-plug.example"}
+  end
+
+  test "exposed headers are returned" do
+    opts = CORSPlug.init(expose: ["content-range", "content-length", "accept-ranges"])
+    conn = conn(:options, "/")
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert get_resp_header(conn, "access-control-expose-headers") == ["content-range,content-length,accept-ranges"]
   end
 end
