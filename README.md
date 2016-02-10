@@ -11,7 +11,7 @@ An [Elixir Plug](http://github.com/elixir-lang/plug) to add [CORS](http://www.w3
 ```elixir
 def deps do
   # ...
-  {:cors_plug, "~> 0.1.4"},
+  {:cors_plug, "~> 1.1"},
   #...
 end
 ```
@@ -69,7 +69,7 @@ You can configure the value of these headers as follows:
 plug CORSPlug, [origins: ["example.com"]]
 ```
 
-Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L13).
+Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L15).
 
 ## License
 
