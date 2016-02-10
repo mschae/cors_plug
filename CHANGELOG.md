@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.1.0
+
+* Enhancements
+  * Allow multiple origins. When configuring you can now pass a list for
+`origins` (`plug: CORSPlug, origin: ~w(example1.com example2.com)`).
+* Fixes
+  * `Access-Control-Expose-Headers` now works
+
+Both of these have been brought to you by @jer-k - many thanks!
+
 ## v1.0.0
 
 * Fixes
