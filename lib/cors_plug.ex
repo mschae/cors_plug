@@ -37,8 +37,8 @@ defmodule CORSPlug do
 
   defp headers(conn, options) do
     [
-      {"access-control-expose-headers", origin(options[:expose], conn)},
       {"access-control-allow-origin", origin(options[:origin], conn)},
+      {"access-control-expose-headers", Enum.join(options[:expose], ",")},
       {"access-control-allow-credentials", "#{options[:credentials]}"}
     ]
   end

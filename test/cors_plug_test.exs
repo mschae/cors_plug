@@ -70,4 +70,14 @@ defmodule CORSPlugTest do
     assert ["http://cors-plug.example"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
+
+  test "exposed headers are returned" do
+     opts = CORSPlug.init(expose: ["content-range", "content-length", "accept-ranges"])
+     conn = conn(:options, "/")
+
+     conn = CORSPlug.call(conn, opts)
+
+     assert get_resp_header(conn, "access-control-expose-headers") ==
+            ["content-range,content-length,accept-ranges"]
+   end
 end
