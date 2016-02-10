@@ -1,6 +1,7 @@
 defmodule CORSPlugTest do
   use ExUnit.Case
   use Plug.Test
+  import Plug.Conn, only: [get_resp_header: 2]
 
   test "returns the right options for regular requests" do
     opts = CORSPlug.init([])
@@ -8,18 +9,18 @@ defmodule CORSPlugTest do
 
     conn = CORSPlug.call(conn, opts)
 
-    assert Enum.member? conn.resp_headers, {"access-control-allow-origin", "*"}
+    assert ["*"] == get_resp_header conn, "access-control-allow-origin"
   end
 
+
   test "lets me overwrite options" do
-    opts = CORSPlug.init(origins: ["example.com"])
-    conn = conn(:get, "/", nil,
-                headers: [{"origin", "example.com"}])
+    opts = CORSPlug.init(origin: "example.com")
+    conn = conn(:get, "/", nil, headers: [{"origin", "example.com"}])
 
     conn = CORSPlug.call(conn, opts)
 
-    assert Enum.member? conn.resp_headers,
-                        {"access-control-allow-origin", "example.com"}
+    assert ["example.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "passes all the relevant headers on an options request" do
@@ -43,31 +44,30 @@ defmodule CORSPlugTest do
   end
 
   test "returns the origin when it is valid" do
-    opts = CORSPlug.init(origins: ["example1.com", "example2.com"])
-    conn = conn(:get, "/", nil,
-                headers: [{"origin", "example1.com"}])
+    opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
+    conn = conn(:get, "/", nil, headers: [{"origin", "example1.com"}])
 
     conn = CORSPlug.call(conn, opts)
-    assert Enum.member? conn.resp_headers, {"access-control-allow-origin", "example1.com"}
+    assert assert ["example1.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns nil when the origin is invalid" do
-    opts = CORSPlug.init(origins: ["example1.com"])
-    conn = conn(:get, "/", nil,
-                headers: [{"origin", "example2.com"}])
+    opts = CORSPlug.init(origin: ["example1.com"])
+    conn = conn(:get, "/", nil, headers: [{"origin", "example2.com"}])
 
     conn = CORSPlug.call(conn, opts)
-    assert Enum.member? conn.resp_headers, {"access-control-allow-origin", nil}
+    assert [nil] == get_resp_header conn, "access-control-allow-origin"
   end
 
   test "returns the request host when origin is :self" do
-    opts = CORSPlug.init(origins: [:self])
+    opts = CORSPlug.init(origin: [:self])
     conn = conn(:get, "/", nil,
                 headers: [{"origin", "http://cors-plug.example"}])
 
     conn = CORSPlug.call(conn, opts)
 
-    assert Enum.member? conn.resp_headers,
-                        {"access-control-allow-origin", "http://cors-plug.example"}
+    assert ["http://cors-plug.example"] ==
+           get_resp_header(conn, "access-control-allow-origin")
   end
 end
