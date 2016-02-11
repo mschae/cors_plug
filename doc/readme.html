@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.3">
-    <title>README – cors_plug v1.0.0</title>
+    <title>README – cors_plug v1.1.0</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -27,7 +27,7 @@
         cors_plug
       </h1>
       <h2 class="sidebar-projectVersion">
-        v1.0.0
+        v1.1.0
       </h2>
     </div>
     
@@ -67,7 +67,7 @@
 </ol>
 <pre><code class="elixir">def deps do
   # ...
-  {:cors_plug, &quot;~&gt; 0.1.4&quot;},
+  {:cors_plug, &quot;~&gt; 1.1&quot;},
   #...
 end</code></pre>
 <p>When used together with the awesomeness that’s the <a href="http://www.phoenixframework.org/">Phoenix Framework</a>
@@ -114,8 +114,8 @@ end</code></pre>
 </li>
 </ul>
 <p>You can configure the value of these headers as follows:</p>
-<pre><code class="elixir">plug CORSPlug, [origin: &quot;example.com&quot;]</code></pre>
-<p>Please find the list of current defaults in <a href="lib/cors_plug.ex#L5:L13">cors_plug.ex</a>.</p>
+<pre><code class="elixir">plug CORSPlug, [origin: [&quot;example.com&quot;]]</code></pre>
+<p>Please find the list of current defaults in <a href="lib/cors_plug.ex#L5:L15">cors_plug.ex</a>.</p>
 <h2 id="License"> License</h2><p>Copyright 2014 Michael Schaefermeyer</p>
 <p>Licensed under the Apache License, Version 2.0 (the “License”);
 you may not use this file except in compliance with the License.

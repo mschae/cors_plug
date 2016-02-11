@@ -66,7 +66,7 @@ On `GET`, `POST`, ... requests:
 You can configure the value of these headers as follows:
 
 ```elixir
-plug CORSPlug, [origin: ["example.com"]]
+plug CORSPlug, origin: ["example.com"]
 ```
 
 Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L15).
