@@ -1,6 +1,8 @@
 CorsPlug
 ========
 [![Build Status](https://travis-ci.org/mschae/cors_plug.svg)](https://travis-ci.org/mschae/cors_plug)
+[![Hex.pm](https://img.shields.io/hexpm/v/cors_plug.svg)]()
+[![Hex.pm](https://img.shields.io/hexpm/l/cors_plug.svg)]()
 
 An [Elixir Plug](http://github.com/elixir-lang/plug) to add [CORS](http://www.w3.org/TR/cors/).
 

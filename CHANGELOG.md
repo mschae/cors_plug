@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.1.1
+
+* Fixes
+  * Return "null" instead of null when no origin matches.
+
+Many thanks to @somlor for the fix!
+
 ## v1.1.0
 
 * Enhancements
