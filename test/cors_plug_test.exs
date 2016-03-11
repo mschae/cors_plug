@@ -52,12 +52,12 @@ defmodule CORSPlugTest do
            get_resp_header(conn, "access-control-allow-origin")
   end
 
-  test "returns nil when the origin is invalid" do
+  test "returns null string when the origin is invalid" do
     opts = CORSPlug.init(origin: ["example1.com"])
     conn = conn(:get, "/", nil, headers: [{"origin", "example2.com"}])
 
     conn = CORSPlug.call(conn, opts)
-    assert [nil] == get_resp_header conn, "access-control-allow-origin"
+    assert ["null"] == get_resp_header conn, "access-control-allow-origin"
   end
 
   test "returns the request host when origin is :self" do
