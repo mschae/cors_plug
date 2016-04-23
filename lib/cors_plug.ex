@@ -31,7 +31,7 @@ defmodule CORSPlug do
   defp headers(conn = %Plug.Conn{method: "OPTIONS"}, options) do
     headers(%{conn | method: nil}, options) ++ [
       {"access-control-max-age", "#{options[:max_age]}"},
-      {"access-control-allow-headers", Enum.join(options[:headers], ",")},
+      {"access-control-allow-headers", allowed_headers(options[:headers], conn)},
       {"access-control-allow-methods", Enum.join(options[:methods], ",")}
     ]
   end
@@ -43,6 +43,16 @@ defmodule CORSPlug do
       {"access-control-expose-headers", Enum.join(options[:expose], ",")},
       {"access-control-allow-credentials", "#{options[:credentials]}"}
     ]
+  end
+
+  # Allow all requested headers
+  defp allowed_headers(["*"], conn) do
+    get_req_header(conn, "access-control-request-headers")
+    |> List.first
+  end
+
+  defp allowed_headers(key, _conn) do
+    Enum.join(key, ",")
   end
 
   # normalize non-list to list

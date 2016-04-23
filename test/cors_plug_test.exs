@@ -12,7 +12,6 @@ defmodule CORSPlugTest do
     assert ["*"] == get_resp_header conn, "access-control-allow-origin"
   end
 
-
   test "lets me overwrite options" do
     opts = CORSPlug.init(origin: "example.com")
     conn = conn(:get, "/", nil, headers: [{"origin", "example.com"}])
@@ -72,12 +71,23 @@ defmodule CORSPlugTest do
   end
 
   test "exposed headers are returned" do
-     opts = CORSPlug.init(expose: ["content-range", "content-length", "accept-ranges"])
-     conn = conn(:options, "/")
+    opts = CORSPlug.init(expose: ["content-range", "content-length", "accept-ranges"])
+    conn = conn(:options, "/")
 
-     conn = CORSPlug.call(conn, opts)
+    conn = CORSPlug.call(conn, opts)
 
-     assert get_resp_header(conn, "access-control-expose-headers") ==
-            ["content-range,content-length,accept-ranges"]
-   end
+    assert get_resp_header(conn, "access-control-expose-headers") ==
+      ["content-range,content-length,accept-ranges"]
+  end
+
+  test "allows all incoming headers" do
+    opts = CORSPlug.init(headers: ["*"])
+    conn = conn(:options, "/", nil,
+                headers: [{"access-control-request-headers", "custom-header,upgrade-insecure-requests"}])
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert get_resp_header(conn, "access-control-allow-headers") ==
+      ["custom-header,upgrade-insecure-requests"]
+  end
 end
