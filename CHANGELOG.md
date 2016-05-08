@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.1.2
+
+* Enhancements
+  * Allow client to set `allow-headers` by sending `request-headers` when using
+    a wildcard.
+
+This enhancement is brought to you by @arathunku
+
 ## v1.1.1
 
 * Fixes
