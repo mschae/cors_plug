@@ -21,3 +21,6 @@ matrix:
     -
       elixir: 1.2
       otp_release: 18.2
+    -
+      elixir: 1.3
+      otp_release: 18.3
