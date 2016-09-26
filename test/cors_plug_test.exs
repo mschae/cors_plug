@@ -43,8 +43,8 @@ defmodule CORSPlugTest do
     end
   end
 
-  test "returns the origin when it is valid" do
-    opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
+  test "returns the origin when equal to origin string" do
+    opts = CORSPlug.init(origin: "example1.com")
     conn = conn(:get, "/")
     |> put_req_header("origin", "example1.com")
 
@@ -53,10 +53,48 @@ defmodule CORSPlugTest do
            get_resp_header(conn, "access-control-allow-origin")
   end
 
-  test "returns null string when the origin is invalid" do
+  test "returns null string when not equal to origin string" do
+    opts = CORSPlug.init(origin: "example1.com")
+    conn = conn(:get, "/")
+    |> put_req_header("origin", "example2.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert ["null"] == get_resp_header conn, "access-control-allow-origin"
+  end
+
+  test "returns the origin when in origin list" do
+    opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
+    conn = conn(:get, "/")
+    |> put_req_header("origin", "example2.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert assert ["example2.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "returns null string when not in origin list" do
     opts = CORSPlug.init(origin: ["example1.com"])
     conn = conn(:get, "/")
     |> put_req_header("origin", "example2.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert ["null"] == get_resp_header conn, "access-control-allow-origin"
+  end
+
+  test "returns the origin when matches origin regex" do
+    opts = CORSPlug.init(origin: ~r/^example.+\.com$/)
+    conn = conn(:get, "/")
+    |> put_req_header("origin", "example42.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert assert ["example42.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "returns null string when does not match origin regex" do
+    opts = CORSPlug.init(origin: ~r/^example.+\.com$/)
+    conn = conn(:get, "/")
+    |> put_req_header("origin", "null-example42.com")
 
     conn = CORSPlug.call(conn, opts)
     assert ["null"] == get_resp_header conn, "access-control-allow-origin"
