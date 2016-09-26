@@ -57,7 +57,7 @@ defmodule CORSPlug do
 
   # return origin if it matches regex, otherwise "null" string
   defp origin(%Regex{} = regex, conn) do
-    req_origin = request_origin(conn)
+    req_origin = conn |> request_origin |> to_string
     if req_origin =~ regex, do: req_origin, else: "null"
   end
 
@@ -68,7 +68,7 @@ defmodule CORSPlug do
 
   # whitelist internal requests
   defp origin([:self], conn) do
-    get_req_header(conn, "origin") |> List.first || "*"
+    request_origin(conn) || "*"
   end
 
   # return "*" if origin list is ["*"]
