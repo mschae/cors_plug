@@ -62,7 +62,7 @@ defmodule CORSPlug do
 
   # whitelist internal requests
   defp origin([:self], conn) do
-    get_req_header(conn, "origin") |> List.first || "*"
+    first_origin(conn) || "*"
   end
 
   # return "*" if origin list is ["*"]
@@ -73,7 +73,13 @@ defmodule CORSPlug do
   # return request origin if in origin list, otherwise "null" string
   # see: https://www.w3.org/TR/cors/#access-control-allow-origin-response-header
   defp origin(origins, conn) when is_list(origins) do
-    req_origin = get_req_header(conn, "origin") |> List.first
-    if req_origin in origins, do: req_origin, else: "null"
+    origin = first_origin(conn)
+    if origin in origins, do: origin, else: "null"
+  end
+
+  defp first_origin(conn) do
+    get_req_header(conn, "origin")
+    |> Enum.concat(get_req_header(conn, "Origin"))
+    |> List.first
   end
 end
