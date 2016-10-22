@@ -74,7 +74,12 @@ defmodule CORSPlug do
   # see: https://www.w3.org/TR/cors/#access-control-allow-origin-response-header
   defp origin(origins, conn) when is_list(origins) do
     origin = first_origin(conn)
-    if origin in origins, do: origin, else: "null"
+    if origin do
+      %{host: host} = URI.parse(origin)
+      if host in origins, do: origin, else: "null"
+    else
+      "null"
+    end
   end
 
   defp first_origin(conn) do
