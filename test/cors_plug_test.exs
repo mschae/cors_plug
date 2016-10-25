@@ -1,7 +1,7 @@
 defmodule CORSPlugTest do
   use ExUnit.Case
   use Plug.Test
-  import Plug.Conn, only: [get_resp_header: 2]
+  import Plug.Conn, only: [get_resp_header: 2, put_req_header: 3]
 
   test "returns the right options for regular requests" do
     opts = CORSPlug.init([])
@@ -14,11 +14,11 @@ defmodule CORSPlugTest do
 
   test "lets me overwrite options" do
     opts = CORSPlug.init(origin: "example.com")
-    conn = conn(:get, "/", nil, headers: [{"origin", "example.com"}])
+    conn = conn(:get, "/") |> put_req_header("origin", "http://example.com")
 
     conn = CORSPlug.call(conn, opts)
 
-    assert ["example.com"] ==
+    assert ["http://example.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
 
@@ -44,16 +44,34 @@ defmodule CORSPlugTest do
 
   test "returns the origin when it is valid" do
     opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
-    conn = conn(:get, "/", nil, headers: [{"origin", "example1.com"}])
+    conn = conn(:get, "/") |> put_req_header("origin", "http://example1.com")
 
     conn = CORSPlug.call(conn, opts)
-    assert assert ["example1.com"] ==
+    assert assert ["http://example1.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "returns the origin even with other port" do
+    opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
+    conn = conn(:get, "/") |> put_req_header("origin", "http://example1.com:8000")
+
+    conn = CORSPlug.call(conn, opts)
+    assert assert ["http://example1.com:8000"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "returns the origin when header is uppercase (Origin)" do
+    opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
+    conn = conn(:get, "/") |> Map.put(:req_headers, [{"Origin", "http://example1.com"}])
+
+    conn = CORSPlug.call(conn, opts)
+    assert assert ["http://example1.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns null string when the origin is invalid" do
     opts = CORSPlug.init(origin: ["example1.com"])
-    conn = conn(:get, "/", nil, headers: [{"origin", "example2.com"}])
+    conn = conn(:get, "/") |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
     assert ["null"] == get_resp_header conn, "access-control-allow-origin"
@@ -61,8 +79,7 @@ defmodule CORSPlugTest do
 
   test "returns the request host when origin is :self" do
     opts = CORSPlug.init(origin: [:self])
-    conn = conn(:get, "/", nil,
-                headers: [{"origin", "http://cors-plug.example"}])
+    conn = conn(:get, "/") |> put_req_header("origin", "http://cors-plug.example")
 
     conn = CORSPlug.call(conn, opts)
 
@@ -82,8 +99,7 @@ defmodule CORSPlugTest do
 
   test "allows all incoming headers" do
     opts = CORSPlug.init(headers: ["*"])
-    conn = conn(:options, "/", nil,
-                headers: [{"access-control-request-headers", "custom-header,upgrade-insecure-requests"}])
+    conn = conn(:options, "/") |> put_req_header("access-control-request-headers", "custom-header,upgrade-insecure-requests")
 
     conn = CORSPlug.call(conn, opts)
 
