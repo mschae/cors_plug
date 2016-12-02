@@ -72,9 +72,8 @@ defmodule CORSPlug do
 
   # return request origin if in origin list, otherwise "null" string
   # see: https://www.w3.org/TR/cors/#access-control-allow-origin-response-header
-  defp origin(origins, conn) when is_list(origins) do
-    combined_origin_headers = get_req_header(conn, "origin") ++ get_req_header(conn, "Origin")
-    req_origin = List.first(combined_origin_headers)
+  defp origin(origins, %Plug.Conn{req_headers: headers}) when is_list(origins) do
+    req_origin = List.find(headers, fn({k, v}) -> String.downcase(k) == "origin" end)
     if req_origin in origins, do: req_origin, else: "null"
   end
 end
