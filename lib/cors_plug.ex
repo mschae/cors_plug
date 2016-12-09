@@ -83,7 +83,7 @@ defmodule CORSPlug do
     if req_origin in origins, do: req_origin, else: "null"
   end
 
-  defp request_origin(conn) do
-    get_req_header(conn, "origin") |> List.first
+  defp request_origin(%Plug.Conn{req_headers: headers}) do
+    Enum.find_value(headers, fn({k, v}) -> k =~ ~r/origin/i && v end)
   end
 end
