@@ -65,10 +65,16 @@ On `GET`, `POST`, ... requests:
 * Access-Control-Expose-Headers
 * Access-Control-Allow-Credentials
 
-You can configure the value of these headers as follows:
+You can configure allowed origins as follows:
 
 ```elixir
-plug CORSPlug, origin: ["example.com"]
+plug CORSPlug, origin: ["http://example1.com", "http://example2.com"]
+```
+
+Alternatively, you can use a regex:
+
+```elixir
+plug CORSPlug, origin: ~r/https?.*example\d?\.com$/
 ```
 
 Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L15).
