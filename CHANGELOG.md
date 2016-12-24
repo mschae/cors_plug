@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.3
+
+* Enhancements
+  * Support regex for `origin` (thanks @somlor)
+
 ## v1.1.2
 
 * Enhancements
