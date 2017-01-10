@@ -6,9 +6,9 @@ defmodule CorsPlug.Mixfile do
       app: :cors_plug,
       version: "1.1.3",
       elixir: ">= 1.0.0",
-      deps: deps,
-      package: package,
-      description: description,
+      deps: deps(),
+      package: package(),
+      description: description(),
       docs: [
         extras: ~W(README.md CHANGELOG.md)
       ]
