@@ -16,7 +16,7 @@ defmodule CORSPlug do
   end
 
   def init(options) do
-    Keyword.merge(defaults, options)
+    Keyword.merge(defaults(), options)
   end
 
   def call(conn, options) do
