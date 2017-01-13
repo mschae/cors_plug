@@ -1,5 +1,10 @@
 # Changelog
 
+## v1.1.4
+
+* Fixes
+  * Add method parens to suppress Elixir 1.4.0 warnings (thanks @seivan).
+
 ## v1.1.3
 
 * Enhancements
