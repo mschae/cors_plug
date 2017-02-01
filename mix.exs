@@ -7,6 +7,7 @@ defmodule CorsPlug.Mixfile do
       version: "1.1.4",
       elixir: ">= 1.0.0",
       deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env),
       package: package(),
       description: description(),
       docs: [
@@ -59,4 +60,7 @@ defmodule CorsPlug.Mixfile do
       }
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 end

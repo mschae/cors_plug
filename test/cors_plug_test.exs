@@ -121,6 +121,42 @@ defmodule CORSPlugTest do
     assert ["null"] == get_resp_header conn, "access-control-allow-origin"
   end
 
+  test "retrieves origin from environment when passed {:system, var} tuple" do
+    on_exit(fn -> System.delete_env("SOME_ENV_VAR") end)
+
+    opts = CORSPlug.init(origin: {:system, "SOME_ENV_VAR"})
+    assert nil == opts[:origin]
+
+    System.put_env("SOME_ENV_VAR", "http://example17.com")
+
+    opts = CORSPlug.init(origin: {:system, "SOME_ENV_VAR"})
+    assert "http://example17.com" == opts[:origin]
+  end
+
+  test "retrieves origin when passed {Module, function} tuple" do
+    opts = CORSPlug.init(origin: {DummyModule, :example})
+
+    assert "http://example.com" == opts[:origin]
+  end
+
+  test "retrieves origin when passed {Module, function, args} tuple" do
+    opts = CORSPlug.init(origin: {DummyModule, :example, [17]})
+
+    assert "http://example17.com" == opts[:origin]
+  end
+
+  test "returns max age when configured as a number" do
+    opts = CORSPlug.init(max_age: 42)
+
+    assert 42 == opts[:max_age]
+  end
+
+  test "returns max age when configured as a string" do
+    opts = CORSPlug.init(max_age: "42")
+
+    assert 42 == opts[:max_age]
+  end
+
   test "returns the request host when origin is :self" do
     opts = CORSPlug.init(origin: [:self])
     conn =

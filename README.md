@@ -71,11 +71,27 @@ You can configure allowed origins as follows:
 plug CORSPlug, origin: ["http://example1.com", "http://example2.com"]
 ```
 
-Alternatively, you can use a regex:
+Alternatively, you can:
 
-```elixir
-plug CORSPlug, origin: ~r/https?.*example\d?\.com$/
-```
+  + use a regex:
+
+  ```elixir
+  plug CORSPlug, origin: ~r/https?.*example\d?\.com$/
+  ```
+
+  + resolve from an environment variable
+
+  ```elixir
+  plug CORSPlug, origin: {:system, "SOME_ENV_VAR"}
+  ```
+
+  + resolve from a configuration module
+
+  ```elixir
+  plug CORSPlug, origin: {ConfigModule, :origins}
+  # or passing in arguments
+  plug CORSPlug, origin: {ConfigModule, :origins, ["http", "https"]}
+  ```
 
 Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L15).
 
