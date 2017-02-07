@@ -173,4 +173,26 @@ defmodule CORSPlugTest do
     assert get_resp_header(conn, "access-control-allow-headers") ==
       ["custom-header,upgrade-insecure-requests"]
   end
+
+  test "include Origin in Vary response header if the Access-Control-Allow-Origin is not `*`" do
+    opts = CORSPlug.init(origin: "http://example.com")
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "null-example42.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert ["Origin"] == get_resp_header conn, "vary"
+  end
+
+  test "dont include Origin in Vary response header if the Access-Control-Allow-Origin is `*`" do
+    opts = CORSPlug.init(origin: "*")
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "null-example42.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert [""] == get_resp_header conn, "vary"
+  end
 end

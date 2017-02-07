@@ -38,10 +38,13 @@ defmodule CORSPlug do
 
   # universal headers
   defp headers(conn, options) do
+    allowed_origin = origin(options[:origin], conn)
+
     [
-      {"access-control-allow-origin", origin(options[:origin], conn)},
+      {"access-control-allow-origin", allowed_origin},
       {"access-control-expose-headers", Enum.join(options[:expose], ",")},
-      {"access-control-allow-credentials", "#{options[:credentials]}"}
+      {"access-control-allow-credentials", "#{options[:credentials]}"},
+      {"vary", vary(allowed_origin)}
     ]
   end
 
@@ -86,4 +89,9 @@ defmodule CORSPlug do
   defp request_origin(%Plug.Conn{req_headers: headers}) do
     Enum.find_value(headers, fn({k, v}) -> k =~ ~r/^origin$/i && v end)
   end
+
+  # Set the Vary response header
+  # see: https://www.w3.org/TR/cors/#resource-implementation
+  defp vary("*"), do: ""
+  defp vary(_allowed_origin), do: "Origin"
 end
