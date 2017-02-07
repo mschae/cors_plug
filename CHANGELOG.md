@@ -1,5 +1,11 @@
 # Changelog
 
+## v.1.2.1
+
+* Fixes
+  * Match for exact origin only (thanks @somlor and @JordanAdams).
+  * Add Vary to response header (thanks @linjunpop).
+
 ## v.1.2.0
 
 * Fixes
