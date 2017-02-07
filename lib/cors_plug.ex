@@ -17,6 +17,13 @@ defmodule CORSPlug do
 
   def init(options) do
     Keyword.merge(defaults(), options)
+    |> Keyword.update!(:origin, &resolve_config/1)
+    |> Keyword.update!(:max_age, fn max_age ->
+        case resolve_config(max_age) do
+          number when is_number(number) -> number
+          string when is_binary(string) -> String.to_integer(string)
+        end
+      end)
   end
 
   def call(conn, options) do
@@ -85,5 +92,19 @@ defmodule CORSPlug do
 
   defp request_origin(%Plug.Conn{req_headers: headers}) do
     Enum.find_value(headers, fn({k, v}) -> k =~ ~r/origin/i && v end)
+  end
+
+  # allow config options to be resolved dynamically
+  defp resolve_config({:system, var}) do
+    System.get_env(var)
+  end
+  defp resolve_config({module, function}) do
+    resolve_config({module, function, []})
+  end
+  defp resolve_config({module, function, args}) do
+    apply(module, function, args)
+  end
+  defp resolve_config(config) do
+    config
   end
 end
