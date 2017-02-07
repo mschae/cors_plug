@@ -1,5 +1,14 @@
 # Changelog
 
+## v.1.2.0
+
+* Fixes
+  * Remove cowboy dependency. Plug should be server-agnostic and this plug does
+    not need cowboy. Thanks to @hauleth and @ewitchin for making me aware.
+
+As I changed dependency this is a minor release. I don't anticipate any
+regressions tho.
+
 ## v1.1.4
 
 * Fixes
