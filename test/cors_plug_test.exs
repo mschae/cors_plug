@@ -134,6 +134,21 @@ defmodule CORSPlugTest do
            get_resp_header(conn, "access-control-allow-origin")
   end
 
+  test "uses exact match origin header" do
+    opts = CORSPlug.init(origin: "example1.com")
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("x-origin", "example0.com")
+      |> put_req_header("origin", "example1.com")
+      |> put_req_header("original", "example2.com")
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert ["example1.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
   test "exposed headers are returned" do
     opts = CORSPlug.init(expose: ["content-range", "content-length", "accept-ranges"])
     conn = conn(:options, "/")

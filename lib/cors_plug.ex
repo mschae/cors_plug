@@ -84,6 +84,6 @@ defmodule CORSPlug do
   end
 
   defp request_origin(%Plug.Conn{req_headers: headers}) do
-    Enum.find_value(headers, fn({k, v}) -> k =~ ~r/origin/i && v end)
+    Enum.find_value(headers, fn({k, v}) -> k =~ ~r/^origin$/i && v end)
   end
 end
