@@ -1,22 +1,23 @@
 defmodule CORSPlug do
   import Plug.Conn
 
-  def defaults do
-    [
-      origin:      "*",
-      credentials: true,
-      max_age:     1728000,
-      headers:     ["Authorization", "Content-Type", "Accept", "Origin",
-                    "User-Agent", "DNT","Cache-Control", "X-Mx-ReqToken",
-                    "Keep-Alive", "X-Requested-With", "If-Modified-Since",
-                    "X-CSRF-Token"],
-      expose:      [],
-      methods:     ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
-    ]
-  end
+  @defaults [
+    origin:      "*",
+    credentials: true,
+    max_age:     1728000,
+    headers:     ["Authorization", "Content-Type", "Accept", "Origin",
+                  "User-Agent", "DNT","Cache-Control", "X-Mx-ReqToken",
+                  "Keep-Alive", "X-Requested-With", "If-Modified-Since",
+                  "X-CSRF-Token"],
+    expose:      [],
+    methods:     ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+  ]
 
   def init(options) do
-    Keyword.merge(defaults(), options)
+    @defaults
+    |> Keyword.merge(options)
+    |> Keyword.update!(:expose, &Enum.join(&1, ","))
+    |> Keyword.update!(:methods, &Enum.join(&1, ","))
   end
 
   def call(conn, options) do
@@ -32,7 +33,7 @@ defmodule CORSPlug do
     headers(%{conn | method: nil}, options) ++ [
       {"access-control-max-age", "#{options[:max_age]}"},
       {"access-control-allow-headers", allowed_headers(options[:headers], conn)},
-      {"access-control-allow-methods", Enum.join(options[:methods], ",")}
+      {"access-control-allow-methods", options[:methods]}
     ]
   end
 
@@ -42,7 +43,7 @@ defmodule CORSPlug do
 
     [
       {"access-control-allow-origin", allowed_origin},
-      {"access-control-expose-headers", Enum.join(options[:expose], ",")},
+      {"access-control-expose-headers", options[:expose]},
       {"access-control-allow-credentials", "#{options[:credentials]}"},
       {"vary", vary(allowed_origin)}
     ]

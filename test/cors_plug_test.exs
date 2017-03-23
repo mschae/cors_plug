@@ -195,4 +195,32 @@ defmodule CORSPlugTest do
     conn = CORSPlug.call(conn, opts)
     assert [""] == get_resp_header conn, "vary"
   end
+
+  test "allowed methods in options are properly returned" do
+    opts = CORSPlug.init(methods: ~w[GET POST])
+    conn = conn(:options, "/")
+    conn = CORSPlug.call(conn, opts)
+
+    allowed_methods = get_resp_header(conn, "access-control-allow-methods")
+    assert allowed_methods == ["GET,POST"]
+  end
+
+  test "default allowed methods are properly returned" do
+    opts = CORSPlug.init([])
+    conn = conn(:options, "/")
+    conn = CORSPlug.call(conn, opts)
+
+    allowed_methods = get_resp_header(conn, "access-control-allow-methods")
+    assert allowed_methods == ["GET,POST,PUT,PATCH,DELETE,OPTIONS"]
+  end
+
+
+  test "expose headers in options are properly returned" do
+    opts = CORSPlug.init(expose: ["X-My-Custom-Header", "X-Another-Custom-Header"])
+    conn = conn(:get, "/")
+    conn = CORSPlug.call(conn, opts)
+
+    expose_headers = get_resp_header(conn, "access-control-expose-headers")
+    assert expose_headers == ["X-My-Custom-Header,X-Another-Custom-Header"]
+  end
 end
