@@ -214,7 +214,6 @@ defmodule CORSPlugTest do
     assert allowed_methods == ["GET,POST,PUT,PATCH,DELETE,OPTIONS"]
   end
 
-
   test "expose headers in options are properly returned" do
     opts = CORSPlug.init(expose: ["X-My-Custom-Header", "X-Another-Custom-Header"])
     conn = conn(:get, "/")
