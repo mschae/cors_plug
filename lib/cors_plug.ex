@@ -16,7 +16,10 @@ defmodule CORSPlug do
   end
 
   def init(options) do
-    Keyword.merge(defaults(), options)
+    defaults()
+    |> Keyword.merge(options)
+    |> Keyword.update!(:expose, &Enum.join(&1, ","))
+    |> Keyword.update!(:methods, &Enum.join(&1, ","))
   end
 
   def call(conn, options) do
@@ -32,7 +35,7 @@ defmodule CORSPlug do
     headers(%{conn | method: nil}, options) ++ [
       {"access-control-max-age", "#{options[:max_age]}"},
       {"access-control-allow-headers", allowed_headers(options[:headers], conn)},
-      {"access-control-allow-methods", Enum.join(options[:methods], ",")}
+      {"access-control-allow-methods", options[:methods]}
     ]
   end
 
@@ -42,7 +45,7 @@ defmodule CORSPlug do
 
     [
       {"access-control-allow-origin", allowed_origin},
-      {"access-control-expose-headers", Enum.join(options[:expose], ",")},
+      {"access-control-expose-headers", options[:expose]},
       {"access-control-allow-credentials", "#{options[:credentials]}"},
       {"vary", vary(allowed_origin)}
     ]
