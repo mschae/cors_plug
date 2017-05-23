@@ -16,10 +16,17 @@ defmodule CORSPlug do
   end
 
   def init(options) do
-    defaults()
-    |> Keyword.merge(options)
+    options
+    |> prepare_cfg(Application.get_all_env(:cors_plug))
     |> Keyword.update!(:expose, &Enum.join(&1, ","))
     |> Keyword.update!(:methods, &Enum.join(&1, ","))
+  end
+
+  defp prepare_cfg(options, nil), do: Keyword.merge(defaults(), options)
+  defp prepare_cfg(options, env) do
+    defaults()
+    |> Keyword.merge(env)
+    |> Keyword.merge(options)
   end
 
   def call(conn, options) do
