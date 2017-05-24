@@ -222,4 +222,26 @@ defmodule CORSPlugTest do
     expose_headers = get_resp_header(conn, "access-control-expose-headers")
     assert expose_headers == ["X-My-Custom-Header,X-Another-Custom-Header"]
   end
+
+  test "allows to be configured via app config" do
+    Application.put_env :cors_plug, :headers, ["X-App-Config-Header"]
+
+    opts = CORSPlug.init([])
+    conn = conn(:options, "/")
+    conn = CORSPlug.call(conn, opts)
+
+    expose_headers = get_resp_header(conn, "access-control-allow-headers")
+    assert expose_headers == ["X-App-Config-Header"]
+  end
+
+  test "init headers override app headers" do
+    Application.put_env :cors_plug, :headers, ["X-App-Config-Header"]
+
+    opts = CORSPlug.init(headers: ["X-Init-Config-Header"])
+    conn = conn(:options, "/")
+    conn = CORSPlug.call(conn, opts)
+
+    expose_headers = get_resp_header(conn, "access-control-allow-headers")
+    assert expose_headers == ["X-Init-Config-Header"]
+  end
 end
