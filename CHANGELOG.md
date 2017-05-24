@@ -1,5 +1,11 @@
 # Changelog
 
+## v.1.3.0
+
+* Enhancements
+  * Allows configuration via app config (see [README.md](README.md), thanks
+    @TokiTori).
+
 ## v.1.2.1
 
 * Fixes
