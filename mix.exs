@@ -36,7 +36,7 @@ defmodule CorsPlug.Mixfile do
       {:plug, "> 0.8.0"},
 
       {:ex_doc, "~> 0.11", only: :dev},
-      {:earmark, "~> 0.2", only: :dev},
+      {:earmark, "~> 1.2", only: :dev},
     ]
   end
 
