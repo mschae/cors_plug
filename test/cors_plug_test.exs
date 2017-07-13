@@ -68,7 +68,7 @@ defmodule CORSPlugTest do
   end
 
   test "returns the origin when origin is in origin option list" do
-    opts = CORSPlug.init(origin: ["example1.com", "example2.com"])
+    opts = CORSPlug.init(origin: ["example1.com", "example2.com", "*"])
     conn =
       :get
       |> conn("/")
@@ -77,6 +77,17 @@ defmodule CORSPlugTest do
     conn = CORSPlug.call(conn, opts)
     assert assert ["example2.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "returns * string when the origin * in the list" do
+    opts = CORSPlug.init(origin: ["example1.com", "*"])
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "example2.com")
+
+    conn = CORSPlug.call(conn, opts)
+    assert ["*"] == get_resp_header conn, "access-control-allow-origin"
   end
 
   test "returns null string when origin is not in origin option list" do

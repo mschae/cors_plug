@@ -93,7 +93,11 @@ defmodule CORSPlug do
   # see: https://www.w3.org/TR/cors/#access-control-allow-origin-response-header
   defp origin(origins, conn) when is_list(origins) do
     req_origin = request_origin(conn)
-    if req_origin in origins, do: req_origin, else: "null"
+    cond do
+      req_origin in origins -> req_origin
+      "*" in origins        -> "*"
+      true                  -> "null"
+    end
   end
 
   defp request_origin(%Plug.Conn{req_headers: headers}) do
