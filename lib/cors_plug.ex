@@ -32,7 +32,7 @@ defmodule CORSPlug do
   def call(conn, options) do
     conn = put_in(conn.resp_headers, conn.resp_headers ++ headers(conn, options))
     case conn.method do
-      "OPTIONS" -> conn |> send_resp(204, "") |> halt
+      "OPTIONS" -> conn |> send_resp(204, "") |> halt()
       _method   -> conn
     end
   end
@@ -49,19 +49,20 @@ defmodule CORSPlug do
   # universal headers
   defp headers(conn, options) do
     allowed_origin = origin(options[:origin], conn)
+    vary_header    = vary_header(allowed_origin, get_resp_header(conn, "vary"))
 
-    [
+    vary_header ++ [
       {"access-control-allow-origin", allowed_origin},
       {"access-control-expose-headers", options[:expose]},
-      {"access-control-allow-credentials", "#{options[:credentials]}"},
-      {"vary", vary(allowed_origin)}
+      {"access-control-allow-credentials", "#{options[:credentials]}"}
     ]
   end
 
   # Allow all requested headers
   defp allowed_headers(["*"], conn) do
-    get_req_header(conn, "access-control-request-headers")
-    |> List.first
+    conn
+    |> get_req_header("access-control-request-headers")
+    |> List.first()
   end
 
   defp allowed_headers(key, _conn) do
@@ -70,13 +71,16 @@ defmodule CORSPlug do
 
   # return origin if it matches regex, otherwise "null" string
   defp origin(%Regex{} = regex, conn) do
-    req_origin = conn |> request_origin |> to_string
+    req_origin = conn |> request_origin() |> to_string()
+
     if req_origin =~ regex, do: req_origin, else: "null"
   end
 
   # normalize non-list to list
   defp origin(key, conn) when not is_list(key) do
-    origin(List.wrap(key), conn)
+    key
+    |> List.wrap()
+    |> origin(conn)
   end
 
   # whitelist internal requests
@@ -106,6 +110,11 @@ defmodule CORSPlug do
 
   # Set the Vary response header
   # see: https://www.w3.org/TR/cors/#resource-implementation
-  defp vary("*"), do: ""
-  defp vary(_allowed_origin), do: "Origin"
+  defp vary_header("*", _headers), do: []
+  defp vary_header(_allowed_origin, []), do: [{"vary", "Origin"}]
+  defp vary_header(_allowed_origin, headers) do
+    vary = Enum.join ["Origin" | headers], ", "
+
+    [{"vary", vary}]
+  end
 end

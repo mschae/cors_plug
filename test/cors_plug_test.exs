@@ -204,7 +204,19 @@ defmodule CORSPlugTest do
       |> put_req_header("origin", "null-example42.com")
 
     conn = CORSPlug.call(conn, opts)
-    assert [""] == get_resp_header conn, "vary"
+    assert [] == get_resp_header conn, "vary"
+  end
+
+  test "dont change Vary response header if the Access-Control-Allow-Origin is `*`" do
+    opts = CORSPlug.init(origin: "*")
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "null-example42.com")
+      |> Plug.Conn.put_resp_header("vary", "User-Agent")
+
+    conn = CORSPlug.call(conn, opts)
+    assert ["User-Agent"] == get_resp_header conn, "vary"
   end
 
   test "allowed methods in options are properly returned" do
