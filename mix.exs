@@ -4,7 +4,7 @@ defmodule CorsPlug.Mixfile do
   def project do
     [
       app: :cors_plug,
-      version: "1.3.0",
+      version: "1.4.0",
       elixir: ">= 1.0.0",
       deps: deps(),
       package: package(),
