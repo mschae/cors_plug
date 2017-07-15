@@ -1,5 +1,18 @@
 # Changelog
 
+## v.1.4.0
+
+* Enhancements
+  * Allows both `*` as well as specific domains in the `origins` config, returns
+    the corresponding value (thanks @mustafaturan)
+* Fixes
+  * Don't overwrite `vary` header values with `"Origin"`, instead append it.
+  * Don't set `vary` header to empty string if not needed.
+  * Use `Plug.Conn.merge_resp_headers/2`
+
+New major release because of the `vary` header changes, I don't expect this
+to break anything.
+
 ## v.1.3.0
 
 * Enhancements
