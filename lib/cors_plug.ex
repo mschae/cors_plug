@@ -30,7 +30,8 @@ defmodule CORSPlug do
   end
 
   def call(conn, options) do
-    conn = put_in(conn.resp_headers, conn.resp_headers ++ headers(conn, options))
+    conn = merge_resp_headers conn, headers(conn, options)
+
     case conn.method do
       "OPTIONS" -> conn |> send_resp(204, "") |> halt()
       _method   -> conn
