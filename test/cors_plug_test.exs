@@ -1,7 +1,13 @@
+defmodule Origins do
+  def get_origin, do: "example.com"
+  def get_list_of_origins, do: ["badexample.org", "goodexample.com"]
+  def get_recursive_origin, do: {Origins, :get_origin}
+end
+
 defmodule CORSPlugTest do
   use ExUnit.Case
   use Plug.Test
-  import Plug.Conn, only: [get_resp_header: 2, put_req_header: 3]
+  import Plug.Conn, only: [assign: 3, get_resp_header: 2, put_req_header: 3]
 
   test "returns the right options for regular requests" do
     opts = CORSPlug.init([])
@@ -267,4 +273,55 @@ defmodule CORSPlugTest do
     expose_headers = get_resp_header(conn, "access-control-allow-headers")
     assert expose_headers == ["X-Init-Config-Header"]
   end
+
+  test "takes origin from conn assigns ignoring provided" do
+    opts = CORSPlug.init(origin: "badexample.org")
+    conn = :get
+      |> conn("/")
+      |> put_req_header("origin", "example.com")
+      |> assign(:origin, ["goodexample.com", "example.com"])
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert ["example.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+
+  end
+
+  test "takes single origin from external module" do
+    opts = CORSPlug.init(origin: {Origins, :get_origin})
+    conn = :get
+      |> conn("/")
+      |> put_req_header("origin", "example.com")
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert ["example.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "takes list of origins from external module" do
+    opts = CORSPlug.init(origin: {Origins, :get_list_of_origins})
+    conn = :get
+      |> conn("/")
+      |> put_req_header("origin", "goodexample.com")
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert ["goodexample.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "takes {mod, fun} from external module for recursive call" do
+    opts = CORSPlug.init(origin: {Origins, :get_recursive_origin})
+    conn = :get
+      |> conn("/")
+      |> put_req_header("origin", "example.com")
+
+    conn = CORSPlug.call(conn, opts)
+
+    assert ["example.com"] ==
+           get_resp_header(conn, "access-control-allow-origin")
+  end
+
 end

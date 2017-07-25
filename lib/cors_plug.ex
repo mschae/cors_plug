@@ -49,7 +49,8 @@ defmodule CORSPlug do
 
   # universal headers
   defp headers(conn, options) do
-    allowed_origin = origin(options[:origin], conn)
+    preffered = conn.assigns[:origin] || options[:origin]
+    allowed_origin = origin(preffered, conn)
     vary_header    = vary_header(allowed_origin, get_resp_header(conn, "vary"))
 
     vary_header ++ [
@@ -75,6 +76,16 @@ defmodule CORSPlug do
     req_origin = conn |> request_origin() |> to_string()
 
     if req_origin =~ regex, do: req_origin, else: "null"
+  end
+
+  defp origin({mod, fun}, conn) do
+    origins = try do 
+      apply(mod, fun, []) 
+    rescue
+      UndefinedFunctionError ->
+        []
+    end
+    origin(origins, conn)
   end
 
   # normalize non-list to list
