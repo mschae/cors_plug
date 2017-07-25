@@ -78,6 +78,16 @@ defmodule CORSPlug do
     if req_origin =~ regex, do: req_origin, else: "null"
   end
 
+  defp origin({mod, fun}, conn) do
+    origins = try do 
+      apply(mod, fun, []) 
+    rescue
+      UndefinedFunctionError ->
+        []
+    end
+    origin(origins, conn)
+  end
+
   # normalize non-list to list
   defp origin(key, conn) when not is_list(key) do
     key

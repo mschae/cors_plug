@@ -91,6 +91,11 @@ incoming data) you could use assigns:
 conn = conn |> assign(:origin, "example.com")
 ```
 
+Or call configure a call to external module via `{module, function}`:
+```elixir
+plug CORSPlug, origin: {MyOrigins, :get_my_origins}
+```
+
 Please note that options passed to the plug overrides app config but app config overrides default options.
 Be careful though - assigning origin in `conn` will override origin
 configuration elsewhere. This is expected behaviour. Without
