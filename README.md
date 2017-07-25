@@ -84,7 +84,17 @@ config :cors_plug,
   max_age: 86400,
   methods: ["GET", "POST"]
 ```
+
+Also, if you want to dynamically configure origins (base it for example on
+incoming data) you could use assigns:
+```elixir
+conn = conn |> assign(:origin, "example.com")
+```
+
 Please note that options passed to the plug overrides app config but app config overrides default options.
+Be careful though - assigning origin in `conn` will override origin
+configuration elsewhere. This is expected behaviour. Without
+`conn.assing[:origin]` plug with fall back to previous configuration.
 
 Please find the list of current defaults in [cors_plug.ex](lib/cors_plug.ex#L5:L15).
 

@@ -49,7 +49,8 @@ defmodule CORSPlug do
 
   # universal headers
   defp headers(conn, options) do
-    allowed_origin = origin(options[:origin], conn)
+    preffered = conn.assigns[:origin] || options[:origin]
+    allowed_origin = origin(preffered, conn)
     vary_header    = vary_header(allowed_origin, get_resp_header(conn, "vary"))
 
     vary_header ++ [
