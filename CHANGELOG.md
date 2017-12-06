@@ -1,5 +1,10 @@
 # Changelog
 
+## v.1.5.0
+
+* Enhancements
+  * Allow configuration of origin via function (thanks @mauricioszabo).
+
 ## v.1.4.0
 
 * Enhancements
