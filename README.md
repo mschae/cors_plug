@@ -26,7 +26,7 @@ I therefore recommend to put it in `lib/your_app/endpoint.ex`:
 
 ```elixir
 defmodule YourApp.Endpoint do
-  use Phoenix.Enpoint, otp_app: :your_app
+  use Phoenix.Endpoint, otp_app: :your_app
 
   # ...
   plug CORSPlug
