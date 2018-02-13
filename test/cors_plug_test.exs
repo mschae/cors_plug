@@ -1,5 +1,5 @@
 defmodule CORSPlugTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   use Plug.Test
   import Plug.Conn, only: [get_resp_header: 2, put_req_header: 3]
 
@@ -14,26 +14,26 @@ defmodule CORSPlugTest do
   end
 
   test "lets me overwrite options" do
-    opts = CORSPlug.init(origin: "example.com")
+    opts = CORSPlug.init(origin: "http://example.com")
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example.com")
+      |> put_req_header("origin", "http://example.com")
       |> CORSPlug.call(opts)
 
-    assert ["example.com"] ==
+    assert ["http://example.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "lets me call a function to resolve origin on every request" do
-    opts = CORSPlug.init(origin: fn -> "example.com" end)
+    opts = CORSPlug.init(origin: fn -> "http://example.com" end)
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example.com")
+      |> put_req_header("origin", "http://example.com")
       |> CORSPlug.call(opts)
 
-    assert ["example.com"] ==
+    assert ["http://example.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
 
@@ -60,57 +60,57 @@ defmodule CORSPlugTest do
   end
 
   test "returns the origin when origin is equal to origin option string" do
-    opts = CORSPlug.init(origin: "example1.com")
+    opts = CORSPlug.init(origin: "http://example1.com")
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example1.com")
+      |> put_req_header("origin", "http://example1.com")
 
     conn = CORSPlug.call(conn, opts)
-    assert assert ["example1.com"] ==
+    assert assert ["http://example1.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns null string when origin is not equal to origin option string" do
-    opts = CORSPlug.init(origin: "example1.com")
+    opts = CORSPlug.init(origin: "http://example1.com")
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example2.com")
+      |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
     assert ["null"] == get_resp_header conn, "access-control-allow-origin"
   end
 
   test "returns the origin when origin is in origin option list" do
-    opts = CORSPlug.init(origin: ["example1.com", "example2.com", "*"])
+    opts = CORSPlug.init(origin: ["http://example1.com", "http://example2.com", "*"])
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example2.com")
+      |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
-    assert assert ["example2.com"] ==
+    assert assert ["http://example2.com"] ==
            get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns * string when the origin * in the list" do
-    opts = CORSPlug.init(origin: ["example1.com", "*"])
+    opts = CORSPlug.init(origin: ["http://example1.com", "*"])
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example2.com")
+      |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
     assert ["*"] == get_resp_header conn, "access-control-allow-origin"
   end
 
   test "returns null string when origin is not in origin option list" do
-    opts = CORSPlug.init(origin: ["example1.com"])
+    opts = CORSPlug.init(origin: ["http://example1.com"])
     conn =
       :get
       |> conn("/")
-      |> put_req_header("origin", "example2.com")
+      |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
     assert ["null"] == get_resp_header conn, "access-control-allow-origin"

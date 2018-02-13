@@ -25,6 +25,8 @@ defmodule CorsPlug.Mixfile do
 
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 1.2", only: :dev},
+
+      {:mix_test_watch, "~> 0.5.0", only: :test},
     ]
   end
 

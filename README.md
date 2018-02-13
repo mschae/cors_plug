@@ -91,7 +91,7 @@ config :cors_plug,
 ### Using a `function/0` that returns the allowed origin as a string
 
 ```elixir
-plug CORSPlug, origin: fn -> "example.com" end
+plug CORSPlug, origin: fn -> "http://example.com" end
 ```
 
 Please note that options passed to the plug overrides app config but app config
@@ -99,6 +99,10 @@ overrides default options.
 
 Please find the list of current defaults in
 [cors_plug.ex](lib/cors_plug.ex#L5:L15).
+
+**As per the [W3C Recommendation](https://www.w3.org/TR/cors/#access-control-allow-origin-response-header)
+the string `null` is returned when no configured origin matched the request.**
+
 
 ## License
 
