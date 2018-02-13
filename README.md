@@ -83,7 +83,7 @@ plug CORSPlug, origin: ~r/https?.*example\d?\.com$/
 
 ```elixir
 config :cors_plug,
-  origin: ["foo.bar"],
+  origin: ["http:/example.com"],
   max_age: 86400,
   methods: ["GET", "POST"]
 ```
