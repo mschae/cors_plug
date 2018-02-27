@@ -83,15 +83,21 @@ plug CORSPlug, origin: ~r/https?.*example\d?\.com$/
 
 ```elixir
 config :cors_plug,
-  origin: ["http:/example.com"],
+  origin: ["http://example.com"],
   max_age: 86400,
   methods: ["GET", "POST"]
 ```
 
 ### Using a `function/0` that returns the allowed origin as a string
 
+**Caveat: Anonymous functions are not possible as they can't be quoted.**
+
 ```elixir
-plug CORSPlug, origin: fn -> "http://example.com" end
+plug CORSPlug, origin: &my_fun/0
+
+def my_fun do
+  http://example.com
+end
 ```
 
 Please note that options passed to the plug overrides app config but app config
