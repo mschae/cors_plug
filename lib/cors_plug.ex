@@ -61,9 +61,8 @@ defmodule CORSPlug do
 
   # Allow all requested headers
   defp allowed_headers(["*"], conn) do
-    conn
-    |> get_req_header("access-control-request-headers")
-    |> List.first()
+    headers = get_req_header(conn, "access-control-request-headers")
+    List.first(headers) || ""
   end
 
   defp allowed_headers(key, _conn) do
