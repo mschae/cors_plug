@@ -93,7 +93,7 @@ config :cors_plug,
 **Caveat: Anonymous functions are not possible as they can't be quoted.**
 
 ```elixir
-plug CORSPlug, origin: &my_fun/0
+plug CORSPlug, origin: &MyModule.my_fun/0
 
 def my_fun do
   http://example.com
