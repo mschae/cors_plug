@@ -1,5 +1,11 @@
 # Changelog
 
+## v.1.5.1
+
+* Fixes
+  * Send proper return value if `Access-Control-Request-Headers` is not present.
+    (thanks @shivamMg)
+
 ## v.1.5.0
 
 * Enhancements

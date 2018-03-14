@@ -4,8 +4,8 @@ defmodule CorsPlug.Mixfile do
   def project do
     [
       app: :cors_plug,
-      version: "1.5.0",
-      elixir: "~> 1.3",
+      version: "1.5.1",
+      elixir: "~> 1.6",
       deps: deps(),
       package: package(),
       description: description(),
@@ -21,7 +21,7 @@ defmodule CorsPlug.Mixfile do
 
   defp deps do
     [
-      {:plug, "~> 1.4"},
+      {:plug, "~> 1.5"},
 
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 1.2", only: :dev},
