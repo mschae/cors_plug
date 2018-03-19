@@ -1,5 +1,10 @@
 # Changelog
 
+## v.1.5.2
+
+* Fixes
+  * Relax version requirements
+
 ## v.1.5.1
 
 * Fixes
