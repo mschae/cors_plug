@@ -26,6 +26,28 @@ defmodule CORSPlugTest do
     assert ["http://example.com"] == get_resp_header(conn, "access-control-allow-origin")
   end
 
+  test "halts and returns https status 204 for options requests by default" do
+    opts = CORSPlug.init([])
+
+    conn =
+      :options
+      |> conn("/")
+      |> CORSPlug.call(opts)
+
+    assert %Plug.Conn{halted: true, status: 204, state: :sent, resp_body: ""} = conn
+  end
+
+  test "lets me set options requests to not be halted" do
+    opts = CORSPlug.init(send_preflight_response?: false)
+
+    conn =
+      :options
+      |> conn("/")
+      |> CORSPlug.call(opts)
+
+    assert %Plug.Conn{halted: false, status: nil, state: :unset, resp_body: nil} = conn
+  end
+
   test "lets me call a function to resolve origin on every request" do
     opts = CORSPlug.init(origin: fn -> "http://example.com" end)
 

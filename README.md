@@ -100,11 +100,25 @@ def my_fun do
 end
 ```
 
+### send_preflight_response?
+
+There may be times when you would like to retain control over the response sent to OPTIONS requests. If you
+would like CORSPlug to only set headers, then set the `send_preflight_response?` option to false.
+
+```elixir
+plug CORSPlug, send_preflight_response?: false
+
+# or in the app config
+
+config :cors_plug,
+  send_preflight_response?: false
+```
+
 Please note that options passed to the plug overrides app config but app config
 overrides default options.
 
 Please find the list of current defaults in
-[cors_plug.ex](lib/cors_plug.ex#L5:L15).
+[cors_plug.ex](lib/cors_plug.ex#L5:L26).
 
 **As per the [W3C Recommendation](https://www.w3.org/TR/cors/#access-control-allow-origin-response-header)
 the string `null` is returned when no configured origin matched the request.**
