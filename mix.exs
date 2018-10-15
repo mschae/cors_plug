@@ -22,11 +22,9 @@ defmodule CorsPlug.Mixfile do
   defp deps do
     [
       {:plug, "~> 1.3 or ~> 1.4 or ~> 1.5"},
-
       {:ex_doc, "~> 0.11", only: :dev},
       {:earmark, "~> 1.2", only: :dev},
-
-      {:mix_test_watch, "~> 0.5.0", only: :test},
+      {:mix_test_watch, "~> 0.5.0", only: :test}
     ]
   end
 
@@ -44,7 +42,7 @@ defmodule CorsPlug.Mixfile do
       licenses: ["Apache 2.0"],
       links: %{
         "Github" => "http://github.com/mschae/cors_plug",
-        "Docs"   => "http://hexdocs.pm/cors_plug",
+        "Docs" => "http://hexdocs.pm/cors_plug"
       }
     ]
   end
