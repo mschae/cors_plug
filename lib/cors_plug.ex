@@ -64,12 +64,20 @@ defmodule CORSPlug do
     allowed_origin = origin(options[:origin], conn)
     vary_header = vary_header(allowed_origin, get_resp_header(conn, "vary"))
 
-    vary_header ++
-      [
-        {"access-control-allow-origin", allowed_origin},
-        {"access-control-expose-headers", options[:expose]},
-        {"access-control-allow-credentials", "#{options[:credentials]}"}
-      ]
+    vary_header ++ cors_headers(allowed_origin, options)
+  end
+
+  # When the origin doesnt match, dont send CORS headers
+  defp cors_headers(nil, _options) do
+    []
+  end
+
+  defp cors_headers(allowed_origin, options) do
+    [
+      {"access-control-allow-origin", allowed_origin},
+      {"access-control-expose-headers", options[:expose]},
+      {"access-control-allow-credentials", "#{options[:credentials]}"}
+    ]
   end
 
   # Allow all requested headers
@@ -83,11 +91,11 @@ defmodule CORSPlug do
     Enum.join(key, ",")
   end
 
-  # return origin if it matches regex, otherwise "null" string
+  # return origin if it matches regex, otherwise nil
   defp origin(%Regex{} = regex, conn) do
     req_origin = conn |> request_origin() |> to_string()
 
-    if req_origin =~ regex, do: req_origin, else: "null"
+    if req_origin =~ regex, do: req_origin, else: nil
   end
 
   # get value if origin is a function
@@ -112,15 +120,13 @@ defmodule CORSPlug do
     "*"
   end
 
-  # return request origin if in origin list, otherwise "null" string
-  # see: https://www.w3.org/TR/cors/#access-control-allow-origin-response-header
   defp origin(origins, conn) when is_list(origins) do
     req_origin = request_origin(conn)
 
     cond do
       req_origin in origins -> req_origin
       "*" in origins -> "*"
-      true -> "null"
+      true -> nil
     end
   end
 
@@ -131,6 +137,7 @@ defmodule CORSPlug do
   # Set the Vary response header
   # see: https://www.w3.org/TR/cors/#resource-implementation
   defp vary_header("*", _headers), do: []
+  defp vary_header(nil, _headers), do: []
   defp vary_header(_allowed_origin, []), do: [{"vary", "Origin"}]
 
   defp vary_header(_allowed_origin, headers) do

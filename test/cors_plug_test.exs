@@ -72,7 +72,7 @@ defmodule CORSPlugTest do
     assert assert ["http://example1.com"] == get_resp_header(conn, "access-control-allow-origin")
   end
 
-  test "returns null string when origin is not equal to origin option string" do
+  test "returns no cors header when origin is not equal to origin option string" do
     opts = CORSPlug.init(origin: "http://example1.com")
 
     conn =
@@ -81,7 +81,7 @@ defmodule CORSPlugTest do
       |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
-    assert ["null"] == get_resp_header(conn, "access-control-allow-origin")
+    assert [] == get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns the origin when origin is in origin option list" do
@@ -108,7 +108,7 @@ defmodule CORSPlugTest do
     assert ["*"] == get_resp_header(conn, "access-control-allow-origin")
   end
 
-  test "returns null string when origin is not in origin option list" do
+  test "returns no CORS header when origin is not in origin option list" do
     opts = CORSPlug.init(origin: ["http://example1.com"])
 
     conn =
@@ -117,7 +117,7 @@ defmodule CORSPlugTest do
       |> put_req_header("origin", "http://example2.com")
 
     conn = CORSPlug.call(conn, opts)
-    assert ["null"] == get_resp_header(conn, "access-control-allow-origin")
+    assert [] == get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns the origin when origin matches origin option regex" do
@@ -132,7 +132,7 @@ defmodule CORSPlugTest do
     assert assert ["example42.com"] == get_resp_header(conn, "access-control-allow-origin")
   end
 
-  test "returns null string when origin is null and origin option is regex" do
+  test "returns no CORS header when origin is null and origin option is regex" do
     opts = CORSPlug.init(origin: ~r/^example.+\.com$/)
 
     conn =
@@ -140,10 +140,10 @@ defmodule CORSPlugTest do
       |> conn("/")
       |> CORSPlug.call(opts)
 
-    assert ["null"] == get_resp_header(conn, "access-control-allow-origin")
+    assert [] == get_resp_header(conn, "access-control-allow-origin")
   end
 
-  test "returns null string when origin does not match origin option regex" do
+  test "returns no CORS header when origin does not match origin option regex" do
     opts = CORSPlug.init(origin: ~r/^example.+\.com$/)
 
     conn =
@@ -152,7 +152,7 @@ defmodule CORSPlugTest do
       |> put_req_header("origin", "null-example42.com")
       |> CORSPlug.call(opts)
 
-    assert ["null"] == get_resp_header(conn, "access-control-allow-origin")
+    assert [] == get_resp_header(conn, "access-control-allow-origin")
   end
 
   test "returns the request host when origin is :self" do
@@ -207,7 +207,7 @@ defmodule CORSPlugTest do
              ["custom-header,upgrade-insecure-requests"]
   end
 
-  test "include Origin in Vary response header if the Access-Control-Allow-Origin is not `*`" do
+  test "dont include Origin in Vary response header if the Origin doesn't match" do
     opts = CORSPlug.init(origin: "http://example.com")
 
     conn =
@@ -216,7 +216,7 @@ defmodule CORSPlugTest do
       |> put_req_header("origin", "null-example42.com")
       |> CORSPlug.call(opts)
 
-    assert ["Origin"] == get_resp_header(conn, "vary")
+    assert [] == get_resp_header(conn, "vary")
   end
 
   test "dont include Origin in Vary response header if the Access-Control-Allow-Origin is `*`" do
@@ -242,6 +242,19 @@ defmodule CORSPlugTest do
       |> CORSPlug.call(opts)
 
     assert ["User-Agent"] == get_resp_header(conn, "vary")
+  end
+
+  test "prepend Origin in Vary response header if the Origin matches and Vary header was set" do
+    opts = CORSPlug.init(origin: "http://example.com")
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "http://example.com")
+      |> Plug.Conn.put_resp_header("vary", "User-Agent")
+      |> CORSPlug.call(opts)
+
+    assert ["Origin, User-Agent"] == get_resp_header(conn, "vary")
   end
 
   test "allowed methods in options are properly returned" do
