@@ -21,7 +21,8 @@ defmodule CORSPlug do
         "X-CSRF-Token"
       ],
       expose: [],
-      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+      methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+      send_preflight_response?: true
     ]
   end
 
@@ -43,9 +44,9 @@ defmodule CORSPlug do
   def call(conn, options) do
     conn = merge_resp_headers(conn, headers(conn, options))
 
-    case conn.method do
-      "OPTIONS" -> conn |> send_resp(204, "") |> halt()
-      _method -> conn
+    case {options[:send_preflight_response?], conn.method} do
+      {true, "OPTIONS"} -> conn |> send_resp(204, "") |> halt()
+      {_, _method} -> conn
     end
   end
 
