@@ -26,6 +26,17 @@ defmodule CORSPlug do
     ]
   end
 
+  @doc false
+  def call(conn, options) do
+    conn = merge_resp_headers(conn, headers(conn, options))
+
+    case {options[:send_preflight_response?], conn.method} do
+      {true, "OPTIONS"} -> conn |> send_resp(204, "") |> halt()
+      {_, _method} -> conn
+    end
+  end
+
+  @doc false
   def init(options) do
     options
     |> prepare_cfg(Application.get_all_env(:cors_plug))
@@ -39,15 +50,6 @@ defmodule CORSPlug do
     defaults()
     |> Keyword.merge(env)
     |> Keyword.merge(options)
-  end
-
-  def call(conn, options) do
-    conn = merge_resp_headers(conn, headers(conn, options))
-
-    case {options[:send_preflight_response?], conn.method} do
-      {true, "OPTIONS"} -> conn |> send_resp(204, "") |> halt()
-      {_, _method} -> conn
-    end
   end
 
   # headers specific to OPTIONS request
