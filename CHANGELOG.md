@@ -4,7 +4,7 @@
 
 * Enhancements
   * Instead of sending `"null"` we don't set the headers at all if the origin doesn't match, as suggested by the [CORS draft 7.2](https://w3c.github.io/webappsec-cors-for-developers/#avoid-returning-access-control-allow-origin-null). Thanks to @YuLeven for initiating the discussion and @slashmili for fixing it. Since we change the return values I consider this a breaking change and released a new major version.
-  * You can now set the option `send_preflight_response?` to `false` (it's `true` by default) to stop `CorsPlug` sending a response to the frelight request. That way the correct headers are set but it's up to you to respond to the request downstream.
+  * You can now set the option `send_preflight_response?` to `false` (it's `true` by default) to stop `CorsPlug` sending a response to the preflight request. That way the correct headers are set but it's up to you to respond to the request downstream.
 
 ## v.1.5.2
 
