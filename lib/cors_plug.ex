@@ -98,7 +98,7 @@ defmodule CORSPlug do
   defp origin(%Regex{} = regex, conn) do
     req_origin = conn |> request_origin() |> to_string()
 
-    if req_origin =~ regex, do: req_origin, else: nil
+    if origins_match?(req_origin, regex), do: req_origin, else: nil
   end
 
   # get value if origin is a function
@@ -127,10 +127,22 @@ defmodule CORSPlug do
     req_origin = request_origin(conn)
 
     cond do
-      req_origin in origins -> req_origin
+      origin_in_list?(req_origin, origins) -> req_origin
       "*" in origins -> "*"
       true -> nil
     end
+  end
+
+  def origin_in_list?(req_origin, origins) do
+    Enum.any?(origins, &origins_match?(req_origin, &1))
+  end
+
+  def origins_match?(req_origin, origin) when is_binary(origin) do
+    req_origin == origin
+  end
+
+  def origins_match?(req_origin, %Regex{} = origin) do
+    req_origin =~ origin
   end
 
   defp request_origin(%Plug.Conn{req_headers: headers}) do
