@@ -103,7 +103,11 @@ defmodule CORSPlug do
 
   # get value if origin is a function
   defp origin(fun, conn) when is_function(fun) do
-    origin(fun.(), conn)
+    if is_function(fun,1) do
+        origin(fun.(conn), conn)
+    else
+        origin(fun.(), conn)
+    end
   end
 
   # normalize non-list to list
