@@ -60,6 +60,18 @@ defmodule CORSPlugTest do
     assert ["http://example.com"] == get_resp_header(conn, "access-control-allow-origin")
   end
 
+  test "lets me call a function (with conn) to resolve origin on every request" do
+    opts = CORSPlug.init(origin: fn _conn -> "http://example.com" end)
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "http://example.com")
+      |> CORSPlug.call(opts)
+
+    assert ["http://example.com"] == get_resp_header(conn, "access-control-allow-origin")
+  end
+
   test "passes all the relevant headers on an options request" do
     opts = CORSPlug.init([])
 

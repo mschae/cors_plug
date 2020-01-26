@@ -101,7 +101,12 @@ defmodule CORSPlug do
     if req_origin =~ regex, do: req_origin, else: nil
   end
 
-  # get value if origin is a function
+  # get value if origin is a function with a single argument
+  defp origin(fun, conn) when is_function(fun, 1) do
+    origin(fun.(conn), conn)
+  end
+
+  # get value if origin is a function with no arguments
   defp origin(fun, conn) when is_function(fun) do
     origin(fun.(), conn)
   end

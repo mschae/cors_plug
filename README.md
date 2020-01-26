@@ -96,7 +96,17 @@ config :cors_plug,
 plug CORSPlug, origin: &MyModule.my_fun/0
 
 def my_fun do
-  http://example.com
+  "http://example.com"
+end
+```
+
+You may also use a `function/1` which takes the `conn` as its argument:
+
+```elixir
+plug CORSPlug, origin: &MyModule.my_fun/1
+
+def my_fun(conn) do
+  conn.assigns.cors_allowed_origins
 end
 ```
 
