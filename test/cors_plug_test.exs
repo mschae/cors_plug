@@ -365,4 +365,24 @@ defmodule CORSPlugTest do
     expose_headers = get_resp_header(conn, "access-control-allow-headers")
     assert expose_headers == ["X-Init-Config-Header"]
   end
+
+  test "allows to mix regex and string in origin configuration" do
+    opts = CORSPlug.init(origin: ["http://string.com", ~r/^regex.+\.com$/])
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "regex42.com")
+      |> CORSPlug.call(opts)
+
+    assert ["regex42.com"] == get_resp_header(conn, "access-control-allow-origin")
+
+    conn =
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "http://string.com")
+      |> CORSPlug.call(opts)
+
+    assert ["http://string.com"] == get_resp_header(conn, "access-control-allow-origin")
+  end
 end

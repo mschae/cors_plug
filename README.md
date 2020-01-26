@@ -80,7 +80,7 @@ You can configure allowed origins using one of the following methods:
 ### Using a list
 
 ```elixir
-plug CORSPlug, origin: ["http://example1.com", "http://example2.com"]
+plug CORSPlug, origin: ["http://example1.com", "http://example2.com", ~r/https?.*example\d?\.com$/]
 ```
 
 ### Using a regex
@@ -106,7 +106,7 @@ config :cors_plug,
 plug CORSPlug, origin: &MyModule.my_fun/0
 
 def my_fun do
-  http://example.com
+  ["http://example.com"]
 end
 ```
 
