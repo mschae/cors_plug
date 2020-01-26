@@ -1,6 +1,6 @@
 CorsPlug
 ========
-[![Build Status](https://travis-ci.org/mschae/cors_plug.svg)](https://travis-ci.org/mschae/cors_plug)
+![GitHub.com](https://github.com/mschae/cors_plug/workflows/.github/workflows/Tests/badge.svg)
 [![Hex.pm](https://img.shields.io/hexpm/v/cors_plug.svg)](https://hex.pm/packages/cors_plug)
 [![Hex.pm](https://img.shields.io/hexpm/l/cors_plug.svg)]()
 
