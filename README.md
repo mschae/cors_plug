@@ -79,6 +79,8 @@ You can configure allowed origins using one of the following methods:
 
 ### Using a list
 
+**Lists can now be comprised of strings, regexes or a mix of both:**
+
 ```elixir
 plug CORSPlug, origin: ["http://example1.com", "http://example2.com", ~r/https?.*example\d?\.com$/]
 ```
@@ -89,6 +91,7 @@ plug CORSPlug, origin: ["http://example1.com", "http://example2.com", ~r/https?.
 plug CORSPlug, origin: ~r/https?.*example\d?\.com$/
 ```
 
+
 ### Using the config.exs file
 
 ```elixir
@@ -98,7 +101,7 @@ config :cors_plug,
   methods: ["GET", "POST"]
 ```
 
-### Using a `function/0` that returns the allowed origin as a string
+### Using a `function/0` or `function/1` that returns the allowed origin as a string
 
 **Caveat: Anonymous functions are not possible as they can't be quoted.**
 
@@ -106,6 +109,16 @@ config :cors_plug,
 plug CORSPlug, origin: &MyModule.my_fun/0
 
 def my_fun do
+  ["http://example.com"]
+end
+```
+
+```elixir
+plug CORSPlug, origin: &MyModule.my_fun/1
+
+def my_fun(conn) do
+  # Do something with conn
+
   ["http://example.com"]
 end
 ```
@@ -136,7 +149,7 @@ the string `null` is returned when no configured origin matched the request.**
 
 ## License
 
-Copyright 2017 Michael Schaefermeyer
+Copyright 2020 Michael Schaefermeyer
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

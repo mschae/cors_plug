@@ -1,28 +1,38 @@
 # Changelog
 
-## v.2.0.0
+## v2.0.1
+* Enhancements
+  * Passing a function with arity 2 as `origin` will pass the `conn` to the 
+    function, allowing configuration based on conn (thanks @billionlaughs).
+  * You can now pass regexes as part of the list of origins (thanks @gabrielpra1).
+* Fixes
+  * Fixes an issue where the request was missing the 
+    `access-control-request-headers` (thanks @zhhz for the initial report and
+    @mfeckie for the fix).
+
+## v2.0.0
 
 * Enhancements
   * Instead of sending `"null"` we don't set the headers at all if the origin doesn't match, as suggested by the [CORS draft 7.2](https://w3c.github.io/webappsec-cors-for-developers/#avoid-returning-access-control-allow-origin-null). Thanks to @YuLeven for initiating the discussion and @slashmili for fixing it. Since we change the return values I consider this a breaking change and released a new major version.
   * You can now set the option `send_preflight_response?` to `false` (it's `true` by default) to stop `CorsPlug` sending a response to the preflight request. That way the correct headers are set but it's up to you to respond to the request downstream.
 
-## v.1.5.2
+## v1.5.2
 
 * Fixes
   * Relax version requirements
 
-## v.1.5.1
+## v1.5.1
 
 * Fixes
   * Send proper return value if `Access-Control-Request-Headers` is not present.
     (thanks @shivamMg)
 
-## v.1.5.0
+## v1.5.0
 
 * Enhancements
   * Allow configuration of origin via function (thanks @mauricioszabo).
 
-## v.1.4.0
+## v1.4.0
 
 * Enhancements
   * Allows both `*` as well as specific domains in the `origins` config, returns
@@ -35,19 +45,19 @@
 New major release because of the `vary` header changes, I don't expect this
 to break anything.
 
-## v.1.3.0
+## v1.3.0
 
 * Enhancements
   * Allows configuration via app config (see [README.md](README.md), thanks
     @TokiTori).
 
-## v.1.2.1
+## v1.2.1
 
 * Fixes
   * Match for exact origin only (thanks @somlor and @JordanAdams).
   * Add Vary to response header (thanks @linjunpop).
 
-## v.1.2.0
+## v1.2.0
 
 * Fixes
   * Remove cowboy dependency. Plug should be server-agnostic and this plug does
@@ -112,6 +122,6 @@ this is a new major).
   * Improve readme (thanks @leighhalliday, @patricksrobertson)
   * Simplify travis.yml (thanks @lowks)
 
-## v.0.1.2
+## v0.1.2
 
 * Release plug dependency
