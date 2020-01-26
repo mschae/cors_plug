@@ -53,9 +53,7 @@ Whenever I get around to, I will bump the plug dependency to the latest version
 of plug. This will ensure compatibility with the latest plug versions.
 
 As of Elixir and OTP, my goal is to test against the three most recent versions 
-respectively. This will change as soon as I incorporate features that only later
-versions of Elixir have, e.g. `System.feth_env/1`. Breaking changes like that 
-will of course result in a new major version of the Gem.
+respectively. 
 
 ## Configuration
 
