@@ -61,7 +61,7 @@ defmodule CORSPlugTest do
   end
 
   test "lets me call a function with conn as a arg to resolve origin on every request" do
-    opts = CORSPlug.init(origin: fn(conn) -> "http://example.com" end)
+    opts = CORSPlug.init(origin: fn _conn -> "http://example.com" end)
 
     conn =
       :get
@@ -70,6 +70,17 @@ defmodule CORSPlugTest do
       |> CORSPlug.call(opts)
 
     assert ["http://example.com"] == get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "raises when I call a function with arity > 1" do
+    assert_raise RuntimeError, fn ->
+      opts = CORSPlug.init(origin: fn _conn, _what? -> "http://example.com" end)
+
+      :get
+      |> conn("/")
+      |> put_req_header("origin", "http://example.com")
+      |> CORSPlug.call(opts)
+    end
   end
 
   test "passes all the relevant headers on an options request" do
@@ -252,6 +263,7 @@ defmodule CORSPlugTest do
     assert get_resp_header(conn, "access-control-allow-headers") ==
              [""]
   end
+
   test "dont include Origin in Vary response header if the Origin doesn't match" do
     opts = CORSPlug.init(origin: "http://example.com")
 

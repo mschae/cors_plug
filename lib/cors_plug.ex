@@ -44,8 +44,6 @@ defmodule CORSPlug do
     |> Keyword.update!(:methods, &Enum.join(&1, ","))
   end
 
-  defp prepare_cfg(options, nil), do: Keyword.merge(defaults(), options)
-
   defp prepare_cfg(options, env) do
     defaults()
     |> Keyword.merge(env)
@@ -86,7 +84,7 @@ defmodule CORSPlug do
   # Allow all requested headers
   defp allowed_headers(["*"], conn) do
     case get_req_header(conn, "access-control-request-headers") do
-      [ first | _tail] -> first
+      [first | _tail] -> first
       _ -> ""
     end
   end
@@ -104,10 +102,18 @@ defmodule CORSPlug do
 
   # get value if origin is a function
   defp origin(fun, conn) when is_function(fun) do
-    if is_function(fun,1) do
-        origin(fun.(conn), conn)
-    else
+    case Function.info(fun, :arity) do
+      {:arity, 0} ->
         origin(fun.(), conn)
+
+      {:arity, 1} ->
+        origin(fun.(conn), conn)
+
+      {:arity, arity} ->
+        raise """
+        Passing a function with arity #{arity} is not supported. Please use
+        one with arity 0 or 1 (in which case it will be passed the `conn`).
+        """
     end
   end
 
