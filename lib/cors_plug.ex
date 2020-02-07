@@ -135,7 +135,7 @@ defmodule CORSPlug do
   end
 
   defp origin(origins, conn) when is_list(origins) do
-    req_origin = request_origin(conn)
+    req_origin = conn |> request_origin() |> to_string()
 
     cond do
       origin_in_list?(req_origin, origins) -> req_origin
