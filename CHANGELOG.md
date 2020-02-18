@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.0.2
+* Fixes
+  * Fixes an issue where the plug would error when no CORS header was set
+    (thanks @alexeyds)
+
 ## v2.0.1
 * Enhancements
   * Passing a function with arity 2 as `origin` will pass the `conn` to the 
