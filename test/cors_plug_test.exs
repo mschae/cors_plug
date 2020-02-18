@@ -188,6 +188,17 @@ defmodule CORSPlugTest do
     assert [] == get_resp_header(conn, "access-control-allow-origin")
   end
 
+  test "returns no CORS header when origin is null and origin option is a list containing a regex" do
+    opts = CORSPlug.init(origin: [~r/^example.+\.com$/])
+
+    conn =
+      :get
+      |> conn("/")
+      |> CORSPlug.call(opts)
+
+    assert [] == get_resp_header(conn, "access-control-allow-origin")
+  end
+
   test "returns no CORS header when origin does not match origin option regex" do
     opts = CORSPlug.init(origin: ~r/^example.+\.com$/)
 
