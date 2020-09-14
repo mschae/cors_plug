@@ -35,9 +35,15 @@ defmodule YourApp.Endpoint do
 end
 ```
 
-Alternatively you can add options routes, as suggested by @leighhalliday
+Alternatively you can add options routes to your scope and CORSPlug to your pipeline, as
+suggested by @leighhalliday
 
 ```elixir
+pipeline :api do
+  plug CORSPlug
+  # ...
+end
+
 scope "/api", PhoenixApp do
   pipe_through :api
 
