@@ -101,7 +101,7 @@ defmodule CORSPlugTest do
     ]
 
     for header <- required_headers do
-      assert header in Keyword.keys(conn.resp_headers)
+      assert header in Enum.map(conn.resp_headers, fn({ k, _ }) -> k end)
     end
   end
 
