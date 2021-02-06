@@ -28,11 +28,22 @@ defmodule CORSPlug do
 
   @doc false
   def call(conn, options) do
-    conn = merge_resp_headers(conn, headers(conn, options))
+    case {options[:send_preflight_response?], conn.method, get_req_header(conn, "access-control-request-method")} do
+      # Not a CORS preflight request
+      {_, "OPTIONS", []} ->
+        conn
 
-    case {options[:send_preflight_response?], conn.method} do
-      {true, "OPTIONS"} -> conn |> send_resp(204, "") |> halt()
-      {_, _method} -> conn
+      {true, "OPTIONS", _} ->
+        conn
+        |> merge_resp_headers(add_cors_headers(conn, options))
+        |> send_resp(204, "")
+        |> halt()
+
+      {false, "OPTIONS", _} ->
+        merge_resp_headers(conn, add_cors_headers(conn, options))
+
+      {_, _, _} ->
+        merge_resp_headers(conn, add_cors_headers(conn, options))
     end
   end
 
@@ -51,8 +62,8 @@ defmodule CORSPlug do
   end
 
   # headers specific to OPTIONS request
-  defp headers(conn = %Plug.Conn{method: "OPTIONS"}, options) do
-    headers(%{conn | method: nil}, options) ++
+  defp add_cors_headers(conn = %Plug.Conn{method: "OPTIONS"}, options) do
+    add_cors_headers(%{conn | method: nil}, options) ++
       [
         {"access-control-max-age", "#{options[:max_age]}"},
         {"access-control-allow-headers", allowed_headers(options[:headers], conn)},
@@ -61,7 +72,7 @@ defmodule CORSPlug do
   end
 
   # universal headers
-  defp headers(conn, options) do
+  defp add_cors_headers(conn, options) do
     allowed_origin = origin(options[:origin], conn)
     vary_header = vary_header(allowed_origin, get_resp_header(conn, "vary"))
 
