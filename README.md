@@ -4,8 +4,8 @@
 [![Module Version](https://img.shields.io/hexpm/v/cors_plug.svg)](https://hex.pm/packages/cors_plug)
 [![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/cors_plug/)
 [![Total Download](https://img.shields.io/hexpm/dt/cors_plug.svg)](https://hex.pm/packages/cors_plug)
-[![License](https://img.shields.io/hexpm/l/cors_plug.svg)](https://github.com/mschae/cors_plug/blob/master/LICENSE)
-[![Last Updated](https://img.shields.io/github/last-commit/mschae/cors_plug.svg)](https://github.com/mschae/cors_plug/commits/master)
+[![License](https://img.shields.io/hexpm/l/cors_plug.svg)](https://github.com/mschae/cors_plug/blob/main/LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/mschae/cors_plug.svg)](https://github.com/mschae/cors_plug/commits/main)
 
 An [Elixir Plug](http://github.com/elixir-lang/plug) to add [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/).
 
