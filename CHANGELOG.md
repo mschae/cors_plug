@@ -1,5 +1,10 @@
 # Changelog
 
+## v2.0.3 - 2021-02-06
+* Fixes
+  * Use recent versions of Elixir and Erlang for testing (thanks @anthonator)
+  * Fix compilation warnings (thanks @thiamsantos)
+
 ## v2.0.2 - 2020-02-18
 
 * Fixes
