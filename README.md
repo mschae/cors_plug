@@ -1,14 +1,17 @@
-CorsPlug
-========
-![Tests](https://github.com/mschae/cors_plug/workflows/Tests/badge.svg)
-[![Hex.pm](https://img.shields.io/hexpm/v/cors_plug.svg)](https://hex.pm/packages/cors_plug)
-[![Hex.pm](https://img.shields.io/hexpm/l/cors_plug.svg)]()
+# CorsPlug
 
-An [Elixir Plug](http://github.com/elixir-lang/plug) to add [CORS](http://www.w3.org/TR/cors/).
+[![CI](https://github.com/mschae/cors_plug/workflows/Tests/badge.svg)](https://github.com/mschae/cors_plug/actions?query=workflow%3ATests)
+[![Module Version](https://img.shields.io/hexpm/v/cors_plug.svg)](https://hex.pm/packages/cors_plug)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-lightgreen.svg)](https://hexdocs.pm/cors_plug/)
+[![Total Download](https://img.shields.io/hexpm/dt/cors_plug.svg)](https://hex.pm/packages/cors_plug)
+[![License](https://img.shields.io/hexpm/l/cors_plug.svg)](https://github.com/mschae/cors_plug/blob/master/LICENSE)
+[![Last Updated](https://img.shields.io/github/last-commit/mschae/cors_plug.svg)](https://github.com/mschae/cors_plug/commits/master)
+
+An [Elixir Plug](http://github.com/elixir-lang/plug) to add [Cross-Origin Resource Sharing (CORS)](http://www.w3.org/TR/cors/).
 
 ## Usage
 
-1. Add this plug to your `mix.exs` dependencies:
+Add this plug to your `mix.exs` dependencies:
 
 ```elixir
 def deps do
@@ -19,7 +22,7 @@ end
 ```
 
 When used together with the awesomeness that's the [Phoenix Framework](http://www.phoenixframework.org/)
-please note that putting the CORSPlug in a pipeline won't work as they are only invoked for
+please note that putting the `CORSPlug` in a pipeline won't work as they are only invoked for
 matched routes.
 
 I therefore recommend to put it in `lib/your_app/endpoint.ex`:
@@ -35,7 +38,7 @@ defmodule YourApp.Endpoint do
 end
 ```
 
-Alternatively you can add options routes to your scope and CORSPlug to your pipeline, as
+Alternatively you can add options routes to your scope and `CORSPlug` to your pipeline, as
 suggested by @leighhalliday
 
 ```elixir
@@ -58,8 +61,7 @@ end
 Whenever I get around to, I will bump the plug dependency to the latest version
 of plug. This will ensure compatibility with the latest plug versions.
 
-As of Elixir and OTP, my goal is to test against the three most recent versions 
-respectively. 
+As of Elixir and Open Telecom Platform (OTP), my goal is to test against the three most recent versions respectively.
 
 ## Configuration
 
@@ -73,7 +75,7 @@ On preflight (`OPTIONS`) requests:
 * Access-Control-Allow-Headers
 * Access-Control-Allow-Methods
 
-On `GET`, `POST`, ... requests:
+On `GET`, `POST`, etc. requests:
 
 * Access-Control-Allow-Origin
 * Access-Control-Expose-Headers
