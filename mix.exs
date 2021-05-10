@@ -2,7 +2,7 @@ defmodule CorsPlug.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/mschae/cors_plug"
-  @version "2.0.3"
+  @version "2.0.4"
 
   def project do
     [
