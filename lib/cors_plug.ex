@@ -28,6 +28,7 @@ defmodule CORSPlug do
 
   @doc false
   def call(conn, options) do
+    options = prepare_cfg(options)
     conn = merge_resp_headers(conn, headers(conn, options))
 
     case {options[:send_preflight_response?], conn.method} do
@@ -39,15 +40,17 @@ defmodule CORSPlug do
   @doc false
   def init(options) do
     options
-    |> prepare_cfg(Application.get_all_env(:cors_plug))
-    |> Keyword.update!(:expose, &Enum.join(&1, ","))
-    |> Keyword.update!(:methods, &Enum.join(&1, ","))
+    |> prepare_cfg()
+
   end
 
-  defp prepare_cfg(options, env) do
+  defp prepare_cfg(options) do
+    env = Application.get_all_env(:cors_plug)
     defaults()
     |> Keyword.merge(env)
     |> Keyword.merge(options)
+    |> to_header_value(:expose)
+    |> to_header_value(:methods)
   end
 
   # headers specific to OPTIONS request
@@ -170,5 +173,18 @@ defmodule CORSPlug do
     vary = Enum.join(["Origin" | headers], ", ")
 
     [{"vary", vary}]
+  end
+
+  defp to_header_value(options, key) do
+    case options[key] do
+      value when is_list(value) ->
+        Keyword.update!(options, key, &Enum.join(&1, ","))
+
+      value when is_binary(value) ->
+        options
+
+      _ ->
+        raise "bad option value for #{key}"
+    end
   end
 end
