@@ -47,8 +47,8 @@ defmodule CORSPlug do
   defp prepare_cfg(options) do
     env = Application.get_all_env(:cors_plug)
     defaults()
-    |> Keyword.merge(env)
     |> Keyword.merge(options)
+    |> Keyword.merge(env)
     |> to_header_value(:expose)
     |> to_header_value(:methods)
   end
