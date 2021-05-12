@@ -1,7 +1,13 @@
 defmodule CORSPlugTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case, async: false
   use Plug.Test
   import Plug.Conn, only: [get_resp_header: 2, put_req_header: 3]
+
+  setup do
+    on_exit(fn ->
+      Application.put_env(:cors_plug, :headers, [])
+    end)
+  end
 
   test "returns the right options for regular requests" do
     opts = CORSPlug.init([])
@@ -252,6 +258,7 @@ defmodule CORSPlugTest do
   test "allows all incoming headers" do
     headers = "custom-header,upgrade-insecure-requests"
     opts = CORSPlug.init(headers: ["*"])
+    Application.put_env(:cors_plug, :headers, ["*"])
 
     conn =
       :options
@@ -375,7 +382,7 @@ defmodule CORSPlugTest do
     assert expose_headers == ["X-App-Config-Header"]
   end
 
-  test "init headers override app headers" do
+  test "init headers don't override app headers" do
     Application.put_env(:cors_plug, :headers, ["X-App-Config-Header"])
 
     opts = CORSPlug.init(headers: ["X-Init-Config-Header"])
@@ -386,7 +393,7 @@ defmodule CORSPlugTest do
       |> CORSPlug.call(opts)
 
     expose_headers = get_resp_header(conn, "access-control-allow-headers")
-    assert expose_headers == ["X-Init-Config-Header"]
+    assert expose_headers == ["X-App-Config-Header"]
   end
 
   test "allows to mix regex and string in origin configuration" do
