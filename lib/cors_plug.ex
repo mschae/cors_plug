@@ -74,11 +74,16 @@ defmodule CORSPlug do
   end
 
   defp cors_headers(allowed_origin, options) do
-    [
+    headers = [
       {"access-control-allow-origin", allowed_origin},
-      {"access-control-expose-headers", options[:expose]},
-      {"access-control-allow-credentials", "#{options[:credentials]}"}
+      {"access-control-expose-headers", options[:expose]}
     ]
+
+    if options[:credentials] do
+      [{"access-control-allow-credentials", "true"} | headers]
+    else
+      headers
+    end
   end
 
   # Allow all requested headers
