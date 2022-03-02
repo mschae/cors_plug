@@ -32,6 +32,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     assert %Plug.Conn{halted: true, status: 204, state: :sent, resp_body: ""} = conn
@@ -43,6 +44,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     assert %Plug.Conn{halted: false, status: nil, state: :unset, resp_body: nil} = conn
@@ -89,6 +91,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     required_headers = [
@@ -252,6 +255,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     assert get_resp_header(conn, "access-control-expose-headers") ==
@@ -266,6 +270,7 @@ defmodule CORSPlugTest do
       :options
       |> conn("/")
       |> put_req_header("access-control-request-headers", headers)
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     assert get_resp_header(conn, "access-control-allow-headers") ==
@@ -278,6 +283,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     assert get_resp_header(conn, "access-control-allow-headers") ==
@@ -340,6 +346,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     allowed_methods = get_resp_header(conn, "access-control-allow-methods")
@@ -352,6 +359,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     allowed_methods = get_resp_header(conn, "access-control-allow-methods")
@@ -378,6 +386,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     expose_headers = get_resp_header(conn, "access-control-allow-headers")
@@ -392,6 +401,7 @@ defmodule CORSPlugTest do
     conn =
       :options
       |> conn("/")
+      |> put_req_header("access-control-request-method", "GET")
       |> CORSPlug.call(opts)
 
     expose_headers = get_resp_header(conn, "access-control-allow-headers")
@@ -416,5 +426,17 @@ defmodule CORSPlugTest do
       |> CORSPlug.call(opts)
 
     assert ["http://string.com"] == get_resp_header(conn, "access-control-allow-origin")
+  end
+
+  test "don't process non-cors preflight requests" do
+    opts = CORSPlug.init(origin: "http://example.com")
+
+    conn =
+      :options
+      |> conn("/")
+      |> put_req_header("origin", "http://example.com")
+      |> CORSPlug.call(opts)
+
+    assert [] == get_resp_header(conn, "access-control-allow-origin")
   end
 end
