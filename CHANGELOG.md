@@ -1,5 +1,8 @@
 # Changelog
 
+## v3.0.1 - 2022-03-02
+Released to keep tag integrity, equivalent to v3.0.0
+
 ## v3.0.0 - 2022-03-02
 * **BREAKING CHANGES** / Fixes
   * Remove allow-credentials when set to false (thanks @AntoineAugusti)
