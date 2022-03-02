@@ -1,5 +1,10 @@
 # Changelog
 
+## v3.0.0 - 2022-03-02
+* **BREAKING CHANGES** / Fixes
+  * Remove allow-credentials when set to false (thanks @AntoineAugusti)
+  * Don't halt non-CORS OPTIONS requests
+
 ## v2.0.3 - 2021-02-06
 * Fixes
   * Use recent versions of Elixir and Erlang for testing (thanks @anthonator)

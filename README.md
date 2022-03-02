@@ -16,7 +16,7 @@ Add this plug to your `mix.exs` dependencies:
 ```elixir
 def deps do
   # ...
-  {:cors_plug, "~> 2.0"},
+  {:cors_plug, "~> 3.0"},
   #...
 end
 ```

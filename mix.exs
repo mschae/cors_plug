@@ -2,13 +2,13 @@ defmodule CorsPlug.Mixfile do
   use Mix.Project
 
   @source_url "https://github.com/mschae/cors_plug"
-  @version "2.0.3"
+  @version "3.0.0"
 
   def project do
     [
       app: :cors_plug,
       version: @version,
-      elixir: "~> 1.9",
+      elixir: "~> 1.13",
       deps: deps(),
       package: package(),
       description: description(),
