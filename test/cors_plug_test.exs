@@ -101,8 +101,17 @@ defmodule CORSPlugTest do
     ]
 
     for header <- required_headers do
-      assert header in Enum.map(conn.resp_headers, fn({ k, _ }) -> k end)
+      assert header in Enum.map(conn.resp_headers, fn {k, _} -> k end)
     end
+  end
+
+  test "does not include allow-credentials if set to false" do
+    opts = CORSPlug.init(origin: "http://example.com", credentials: false)
+
+    conn = :get |> conn("/") |> put_req_header("origin", "http://example.com")
+
+    conn = CORSPlug.call(conn, opts)
+    refute "access-control-allow-credentials" in Enum.map(conn.resp_headers, fn {k, _} -> k end)
   end
 
   test "returns the origin when origin is equal to origin option string" do
