@@ -79,7 +79,7 @@ defmodule CORSPlug do
     vary_header ++ cors_headers(allowed_origin, options)
   end
 
-  # When the origin doesnt match, dont send CORS headers
+  # When the origin doesn't match, dont send CORS headers
   defp cors_headers(nil, _options) do
     []
   end
