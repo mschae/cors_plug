@@ -123,7 +123,7 @@ Both of these have been brought to you by @jer-k - many thanks!
 ## v1.0.0 - 2016-01-22
 
 * Fixes
-  * Don't override headers. Earlier headers would've been overriden by the
+  * Don't override headers. Earlier headers would've been overridden by the
     CORS Plug. Amazing that this hasn't popped up before...
 
 As this makes a backward-incompatible change (no longer overriding headers
