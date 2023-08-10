@@ -35,12 +35,12 @@ defmodule CORSPlug do
 
       {true, "OPTIONS", _} ->
         conn
-        |> merge_resp_headers(add_cors_headers(conn, options))
+        |> merge_resp_headers(add_cors_headers_options(conn, options))
         |> send_resp(204, "")
         |> halt()
 
       {false, "OPTIONS", _} ->
-        merge_resp_headers(conn, add_cors_headers(conn, options))
+        merge_resp_headers(conn, add_cors_headers_options(conn, options))
 
       {_, _, _} ->
         merge_resp_headers(conn, add_cors_headers(conn, options))
@@ -62,8 +62,8 @@ defmodule CORSPlug do
   end
 
   # headers specific to OPTIONS request
-  defp add_cors_headers(conn = %Plug.Conn{method: "OPTIONS"}, options) do
-    add_cors_headers(%{conn | method: nil}, options) ++
+  defp add_cors_headers_options(conn, options) do
+    add_cors_headers(conn, options) ++
       [
         {"access-control-max-age", "#{options[:max_age]}"},
         {"access-control-allow-headers", allowed_headers(options[:headers], conn)},
