@@ -1,19 +1,54 @@
-name: Tests
-on: [push, pull_request]
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    name: OTP ${{matrix.otp}} / Elixir ${{matrix.elixir}}
+    runs-on: ubuntu-20.04
+    env:
+      MIX_ENV: test
     strategy:
+      fail-fast: false
       matrix:
-        otp: [22, 23, 24]
-        elixir: [1.11, 1.12, 1.13]
+        include:
+          - pair:
+              elixir: 1.11.x
+              otp: 22.3.x
+          - pair:
+              elixir: 1.15.x
+              otp: 26.1.x
+            lint: lint
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+
       - uses: erlef/setup-beam@v1
         with:
-          otp-version: ${{matrix.otp}}
-          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.pair.otp}}
+          elixir-version: ${{matrix.pair.elixir}}
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{matrix.pair.elixir}}-${{matrix.pair.otp}}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-
       - run: mix deps.get
+
+      - run: mix format --check-formatted
+        if: ${{ matrix.lint }}
+
+      - run: mix deps.unlock --check-unused
+        if: ${{ matrix.lint }}
+
+      - run: mix deps.compile
+
+      - run: mix compile --warnings-as-errors
+        if: ${{ matrix.lint }}
+
       - run: mix test
