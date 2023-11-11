@@ -28,7 +28,8 @@ defmodule CORSPlug do
 
   @doc false
   def call(conn, options) do
-    case {options[:send_preflight_response?], conn.method, get_req_header(conn, "access-control-request-method")} do
+    case {options[:send_preflight_response?], conn.method,
+          get_req_header(conn, "access-control-request-method")} do
       # Not a CORS preflight request
       {_, "OPTIONS", []} ->
         conn
